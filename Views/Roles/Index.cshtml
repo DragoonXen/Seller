@@ -1,6 +1,4 @@
-﻿@model Seller.ViewModels.Roles.RolesManagement
-
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
@@ -18,24 +16,24 @@
 
 <h2>User select</h2>
 
-<div>Total users: @Model.TotalUsers</div>
+<div>Total users: @ViewBag.TotalUsers</div>
 <ul>
-    @foreach (MembershipUser user in @Model.Users)
+    @foreach (MembershipUser user in @ViewBag.Users)
     {
         <li>@Html.ActionLink(user.UserName, "UserDetails", new {user = user.ProviderUserKey})</li>
     }
 </ul>
 
 <div>
-    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-    of @Model.PageCount
+    Page @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber)
+    of @ViewBag.PageCount
      
-    @if (Model.HasPreviousPage)
+    @if (ViewBag.HasPreviousPage)
     {
-        @Html.ActionLink("<<", "Index", new {page = 1, pageSize = Model.PageSize})
+        @Html.ActionLink("<<", "Index", new {page = 1, pageSize = ViewBag.PageSize})
         @Html.Raw(" ")
         ;
-        @Html.ActionLink("< Prev", "Index", new {page = Model.PageNumber - 1, pageSize = Model.PageSize})
+        @Html.ActionLink("< Prev", "Index", new {page = ViewBag.PageNumber - 1, pageSize = ViewBag.PageSize})
     }
     else
     {
@@ -45,12 +43,12 @@
         @:< Prev
     }
      
-    @if (Model.HasNextPage)
+    @if (ViewBag.HasNextPage)
     {
-        @Html.ActionLink("Next >", "Index", new {page = Model.PageNumber + 1, pageSize = Model.PageSize})
+        @Html.ActionLink("Next >", "Index", new {page = ViewBag.PageNumber + 1, pageSize = ViewBag.PageSize})
         @Html.Raw(" ")
         ;
-        @Html.ActionLink(">>", "Index", new {page = Model.PageCount, pageSize = Model.PageSize})
+        @Html.ActionLink(">>", "Index", new {page = ViewBag.PageCount, pageSize = ViewBag.PageSize})
     }
     else
     {

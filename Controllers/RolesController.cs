@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Security;
-using Seller.ViewModels.Roles;
 
 namespace Seller.Controllers
 {
@@ -18,27 +17,24 @@ namespace Seller.Controllers
             if (usersPerPage > 0)
             {
                 int totalUsers;
-                return View(new RolesManagement
-                                {
-                                    Users = Membership.GetAllUsers(pageNumber - 1, usersPerPage, out totalUsers),
-                                    PageCount = (totalUsers + usersPerPage - 1)/usersPerPage,
-                                    PageSize = usersPerPage,
-                                    PageNumber = pageNumber,
-                                    TotalUsers = totalUsers
-                                });
+                ViewBag.Users = Membership.GetAllUsers(pageNumber - 1, usersPerPage, out totalUsers);
+                ViewBag.PageCount = (totalUsers + usersPerPage - 1) / usersPerPage;
+                ViewBag.PageSize = usersPerPage;
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.TotalUsers = totalUsers;
             }
             else
             {
                 MembershipUserCollection users = Membership.GetAllUsers();
-                return View(new RolesManagement
-                                {
-                                    Users = users,
-                                    PageCount = 1,
-                                    PageSize = 0,
-                                    PageNumber = 1,
-                                    TotalUsers = users.Count
-                                });
+                ViewBag.Users = users;
+                ViewBag.PageCount = 1;
+                ViewBag.PageSize = 0;
+                ViewBag.PageNumber = 1;
+                ViewBag.TotalUsers = users.Count;
             }
+            ViewBag.HasPreviousPage = ViewBag.PageNumber > 1;
+            ViewBag.HasNextPage = ViewBag.PageNumber < ViewBag.PageCount;
+            return View();
         }
 
         public ActionResult BrowseRole(string role)

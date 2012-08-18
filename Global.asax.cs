@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Seller.DAL;
 using log4net;
 
 namespace Seller
@@ -31,6 +33,8 @@ namespace Seller
 
         protected void Application_Start()
         {
+            Database.SetInitializer(new DataInitializer());
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
@@ -41,7 +45,7 @@ namespace Seller
         {
             HttpContext context = HttpContext.Current;
             Log.ErrorFormat("Request {0} from host {1} send an error:{2}{3}", context.Request, context.Request.UserHostAddress, Environment.NewLine, context.Server.GetLastError());
-            context.ClearError();
+         //   context.ClearError();
         }
     }
 }

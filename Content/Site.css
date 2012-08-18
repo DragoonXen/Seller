@@ -206,7 +206,8 @@ select {
     color: #444;
 }
 
-input[type="submit"] {
+input[type="submit"],
+input[type="button"] {
     font-size: 1.2em;
     padding: 5px;
 }

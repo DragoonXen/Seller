@@ -18,6 +18,10 @@ namespace Seller.Models
         public string Adress { get; set; }
 
         [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
         public int Course { get; set; }
     }
 }
