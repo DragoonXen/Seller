@@ -1,0 +1,20 @@
+﻿@model string
+@{
+    ViewBag.Title = "BrowseRole";
+}
+
+<h2>BrowseRole</h2>
+
+@using (Html.BeginForm("RemoveChecked","Roles"))
+{
+    <input type="hidden" name="role" value="@Model" />
+
+    <ul>
+        @foreach (string user in @Roles.GetUsersInRole(Model))
+        {
+            <li><input type="checkbox" name="selectedUsers" value="@user" /> @user</li>
+        }
+    </ul>
+
+    @Html.ActionLink("To index", "Index") <input type="submit" value="Remove" />
+}

@@ -1,0 +1,23 @@
+﻿@model MembershipUser
+
+@{
+    ViewBag.Title = "User roles management";
+}
+
+<h2>User roles management</h2>
+
+@Model.UserName
+
+@using (Html.BeginForm("UpdateUserRoles","Roles"))
+{
+    <input type="hidden" name="userGuid" value="@Model.ProviderUserKey" />
+
+    <ul>
+        @foreach (var role in Roles.GetAllRoles())
+        {
+            <li><input type="checkbox" name="selectedRoles" value="@role" @Html.Raw(Roles.IsUserInRole(Model.UserName, role) ? "checked=\"checked\"" : "")/> @role</li>
+        }
+    </ul>
+
+    <input type="submit" value="Update" />
+}

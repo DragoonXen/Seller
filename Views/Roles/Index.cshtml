@@ -1,0 +1,69 @@
+﻿@model Seller.ViewModels.Roles.RolesManagement
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Roles select</h2>
+@{
+    string[] roles = Roles.GetAllRoles();
+    foreach (string role in @roles)
+    {
+        <div class="gallery">@Html.ActionLink(role, "BrowseRole", new {role})</div>
+    }
+    <br/>
+    <p>Total: @roles.Length</p>
+    <br/>
+}
+
+<h2>User select</h2>
+
+<div>Total users: @Model.TotalUsers</div>
+<ul>
+    @foreach (MembershipUser user in @Model.Users)
+    {
+        <li>@Html.ActionLink(user.UserName, "UserDetails", new {user = user.ProviderUserKey})</li>
+    }
+</ul>
+
+<div>
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    of @Model.PageCount
+     
+    @if (Model.HasPreviousPage)
+    {
+        @Html.ActionLink("<<", "Index", new {page = 1, pageSize = Model.PageSize})
+        @Html.Raw(" ")
+        ;
+        @Html.ActionLink("< Prev", "Index", new {page = Model.PageNumber - 1, pageSize = Model.PageSize})
+    }
+    else
+    {
+        @:<<
+        @Html.Raw(" ")
+        ;
+        @:< Prev
+    }
+     
+    @if (Model.HasNextPage)
+    {
+        @Html.ActionLink("Next >", "Index", new {page = Model.PageNumber + 1, pageSize = Model.PageSize})
+        @Html.Raw(" ")
+        ;
+        @Html.ActionLink(">>", "Index", new {page = Model.PageCount, pageSize = Model.PageSize})
+    }
+    else
+    {
+        @:Next >
+        @Html.Raw(" ")
+        @:>>
+    }
+</div>
+<div>
+    <p>Users per page:
+    @Html.ActionLink("5", "Index", new {pageSize = 5})
+    @Html.ActionLink("10", "Index", new {pageSize = 10})
+    @Html.ActionLink("20", "Index", new {pageSize = 20})
+    @Html.ActionLink("50", "Index", new {pageSize = 50})
+    @Html.ActionLink("All", "Index", new {pageSize = 0})</p>
+</div>
