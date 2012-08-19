@@ -11,24 +11,24 @@ namespace Seller.Controllers
         private readonly DataContext db = new DataContext();
 
         //
-        // GET: /Magazine/
+        // GET: /Shop/
 
         public ViewResult Index()
         {
-            return View(db.Magazines.ToList());
+            return View(db.Shops.ToList());
         }
 
         //
-        // GET: /Magazine/Details/5
+        // GET: /Shop/Details/5
 
         public ViewResult Details(int id)
         {
-            Magazine magazine = db.Magazines.Find(id);
+            Shop magazine = db.Shops.Find(id);
             return View(magazine);
         }
 
         //
-        // GET: /Magazine/Create
+        // GET: /Shop/Create
 
         public ActionResult Create()
         {
@@ -36,14 +36,14 @@ namespace Seller.Controllers
         }
 
         //
-        // POST: /Magazine/Create
+        // POST: /Shop/Create
 
         [HttpPost]
-        public ActionResult Create(Magazine magazine)
+        public ActionResult Create(Shop magazine)
         {
             if (ModelState.IsValid)
             {
-                db.Magazines.Add(magazine);
+                db.Shops.Add(magazine);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -52,19 +52,19 @@ namespace Seller.Controllers
         }
 
         //
-        // GET: /Magazine/Edit/5
+        // GET: /Shop/Edit/5
 
         public ActionResult Edit(int id)
         {
-            Magazine magazine = db.Magazines.Find(id);
+            Shop magazine = db.Shops.Find(id);
             return View(magazine);
         }
 
         //
-        // POST: /Magazine/Edit/5
+        // POST: /Shop/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Magazine magazine)
+        public ActionResult Edit(Shop magazine)
         {
             if (ModelState.IsValid)
             {
@@ -76,22 +76,22 @@ namespace Seller.Controllers
         }
 
         //
-        // GET: /Magazine/Delete/5
+        // GET: /Shop/Delete/5
 
         public ActionResult Delete(int id)
         {
-            Magazine magazine = db.Magazines.Find(id);
+            Shop magazine = db.Shops.Find(id);
             return View(magazine);
         }
 
         //
-        // POST: /Magazine/Delete/5
+        // POST: /Shop/Delete/5
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Magazine magazine = db.Magazines.Find(id);
-            db.Magazines.Remove(magazine);
+            Shop magazine = db.Shops.Find(id);
+            db.Shops.Remove(magazine);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

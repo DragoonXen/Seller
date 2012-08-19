@@ -11,13 +11,13 @@ namespace Seller.Models
 
         [Key]
         [Column(Order = 2)]
-        public int MagazineId { get; set; }
+        public int ShopId { get; set; }
 
         [Required]
         public Product Product { get; set; }
 
         [Required]
-        public Magazine Magazine { get; set; }
+        public Shop Shop { get; set; }
 
         [Required]
         public int Price { get; set; }

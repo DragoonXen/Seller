@@ -10,8 +10,10 @@ namespace Seller.Models
         [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Site { get; set; }
 
-        public string LogoUrl { get; set; }
+        [Required]
+        public string LogoPath { get; set; }
     }
 }

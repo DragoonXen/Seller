@@ -27,12 +27,13 @@ namespace Seller
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new {controller = "Home", action = "Index", id = UrlParameter.Optional} // Parameter defaults
+                new {controller = "Products", action = "Index", id = UrlParameter.Optional} // Parameter defaults
                 );
         }
 
         protected void Application_Start()
         {
+            Helper.Roles.CheckRoles();
             Database.SetInitializer(new DataInitializer());
 
             AreaRegistration.RegisterAllAreas();
@@ -44,8 +45,9 @@ namespace Seller
         protected void Application_Error(Object sender, EventArgs e)
         {
             HttpContext context = HttpContext.Current;
-            Log.ErrorFormat("Request {0} from host {1} send an error:{2}{3}", context.Request, context.Request.UserHostAddress, Environment.NewLine, context.Server.GetLastError());
-         //   context.ClearError();
+            Log.ErrorFormat("Request {0} from host {1} send an error:{2}{3}", context.Request,
+                            context.Request.UserHostAddress, Environment.NewLine, context.Server.GetLastError());
+            //context.ClearError();
         }
     }
 }

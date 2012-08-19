@@ -4,7 +4,7 @@ using System.Web.Security;
 
 namespace Seller.Controllers
 {
-    public class HomeController : Controller
+    public class ProductsController : Controller
     {
         //
         // GET: /Home/

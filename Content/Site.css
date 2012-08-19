@@ -328,3 +328,7 @@ div#title {
     float: left;
     width: 250px;
 }
+
+h2 {
+    clear: both;
+}

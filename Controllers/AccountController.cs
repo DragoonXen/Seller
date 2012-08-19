@@ -33,7 +33,7 @@ namespace Seller.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Products");
                     }
                 }
                 else
@@ -53,7 +53,7 @@ namespace Seller.Controllers
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Products");
         }
 
         //
@@ -80,7 +80,7 @@ namespace Seller.Controllers
                 if (createStatus == MembershipCreateStatus.Success)
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Products");
                 }
                 else
                 {

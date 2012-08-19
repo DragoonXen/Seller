@@ -5,7 +5,7 @@ using System.Web.Security;
 
 namespace Seller.Controllers
 {
-    [Authorize(Roles = Helper.Administrator)]
+    [Authorize(Roles = Helper.Roles.Administrator)]
     public class RolesController : Controller
     {
         //
@@ -18,9 +18,17 @@ namespace Seller.Controllers
             {
                 int totalUsers;
                 ViewBag.Users = Membership.GetAllUsers(pageNumber - 1, usersPerPage, out totalUsers);
-                ViewBag.PageCount = (totalUsers + usersPerPage - 1) / usersPerPage;
+                ViewBag.PageCount = (totalUsers + usersPerPage - 1)/usersPerPage;
+                if (pageNumber <= ViewBag.PageCount)
+                {
+                    ViewBag.PageNumber = pageNumber;
+                }
+                else
+                {
+                    ViewBag.PageNumber = 1;
+                    ViewBag.Users = Membership.GetAllUsers(0, usersPerPage, out totalUsers);
+                }
                 ViewBag.PageSize = usersPerPage;
-                ViewBag.PageNumber = pageNumber;
                 ViewBag.TotalUsers = totalUsers;
             }
             else

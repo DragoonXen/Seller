@@ -15,7 +15,7 @@ namespace Seller.Models
         public Producer Producer { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [MaxLength(50)]
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -23,5 +23,7 @@ namespace Seller.Models
         public ICollection<Image> Images { get; set; }
 
         public Guid CreatedBy { get; set; }
+
+        public ICollection<Offer> Offers { get; set; }
     }
 }

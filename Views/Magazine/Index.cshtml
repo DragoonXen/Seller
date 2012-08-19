@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Seller.Models.Magazine>
+﻿@model IEnumerable<Seller.Models.Shop>
 
 @{
     ViewBag.Title = "Index";
@@ -47,9 +47,9 @@
             @Html.DisplayFor(modelItem => item.Course)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MagazineId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MagazineId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MagazineId })
+            @Html.ActionLink("Edit", "Edit", new { id=item.ShopId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ShopId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ShopId })
         </td>
     </tr>
 }

@@ -10,8 +10,6 @@
         <div class="gallery">@Html.ActionLink(role, "BrowseRole", new {role})</div>
     }
     <br/>
-    <p>Total: @roles.Length</p>
-    <br/>
 }
 
 <h2>User select</h2>
@@ -59,9 +57,9 @@
 </div>
 <div>
     <p>Users per page:
-    @Html.ActionLink("5", "Index", new {pageSize = 5})
-    @Html.ActionLink("10", "Index", new {pageSize = 10})
-    @Html.ActionLink("20", "Index", new {pageSize = 20})
-    @Html.ActionLink("50", "Index", new {pageSize = 50})
-    @Html.ActionLink("All", "Index", new {pageSize = 0})</p>
+        @Html.ActionLink("5", "Index", new {pageSize = 5})
+        @Html.ActionLink("10", "Index", new {pageSize = 10})
+        @Html.ActionLink("20", "Index", new {pageSize = 20})
+        @Html.ActionLink("50", "Index", new {pageSize = 50})
+        @Html.ActionLink("All", "Index", new {pageSize = 0})</p>
 </div>
