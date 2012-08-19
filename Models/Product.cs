@@ -12,6 +12,7 @@ namespace Seller.Models
         [Required]
         public Category Category { get; set; }
 
+        [Required]
         public Producer Producer { get; set; }
 
         [Required]

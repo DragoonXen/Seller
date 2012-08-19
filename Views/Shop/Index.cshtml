@@ -18,13 +18,25 @@
             Site
         </th>
         <th>
+            Phone
+        </th>
+        <th>
             Adress
+        </th>
+        <th>
+            Description
         </th>
         <th>
             Email
         </th>
         <th>
-            Course
+            Exchange
+        </th>
+        <th>
+            Image
+        </th>
+        <th>
+            AccountGuid
         </th>
         <th></th>
     </tr>
@@ -38,13 +50,25 @@
             @Html.DisplayFor(modelItem => item.Site)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Phone)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.Adress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Email)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Course)
+            @Html.DisplayFor(modelItem => item.Exchange)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Image)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AccountGuid)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ShopId }) |

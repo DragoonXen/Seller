@@ -1,7 +1,12 @@
-﻿namespace Seller
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace Seller
 {
     public static class Helper
     {
+        public static readonly char[] SpaceSeparator = new[] {' '};
+
         #region Nested type: Roles
 
         public static class Roles
@@ -10,9 +15,12 @@
             public const string Moderator = "Moderator";
             public const string Magazine = "Shop";
 
+            public static readonly ReadOnlyCollection<string> RolesArray =
+                new ReadOnlyCollection<string>(new List<string> {Administrator, Moderator, Magazine});
+
             public static void CheckRoles()
             {
-                foreach (string role in new[] {Administrator, Moderator, Magazine})
+                foreach (string role in RolesArray)
                 {
                     if (!System.Web.Security.Roles.RoleExists(role))
                     {

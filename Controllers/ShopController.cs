@@ -1,14 +1,18 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
-using Seller.DAL;
 using Seller.Models;
+using Seller.DAL;
 
 namespace Seller.Controllers
-{
-    public class MagazineController : Controller
+{ 
+    public class ShopController : Controller
     {
-        private readonly DataContext db = new DataContext();
+        private DataContext db = new DataContext();
 
         //
         // GET: /Shop/
@@ -23,8 +27,8 @@ namespace Seller.Controllers
 
         public ViewResult Details(int id)
         {
-            Shop magazine = db.Shops.Find(id);
-            return View(magazine);
+            Shop shop = db.Shops.Find(id);
+            return View(shop);
         }
 
         //
@@ -33,55 +37,55 @@ namespace Seller.Controllers
         public ActionResult Create()
         {
             return View();
-        }
+        } 
 
         //
         // POST: /Shop/Create
 
         [HttpPost]
-        public ActionResult Create(Shop magazine)
+        public ActionResult Create(Shop shop)
         {
             if (ModelState.IsValid)
             {
-                db.Shops.Add(magazine);
+                db.Shops.Add(shop);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index");  
             }
 
-            return View(magazine);
+            return View(shop);
         }
-
+        
         //
         // GET: /Shop/Edit/5
-
+ 
         public ActionResult Edit(int id)
         {
-            Shop magazine = db.Shops.Find(id);
-            return View(magazine);
+            Shop shop = db.Shops.Find(id);
+            return View(shop);
         }
 
         //
         // POST: /Shop/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Shop magazine)
+        public ActionResult Edit(Shop shop)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(magazine).State = EntityState.Modified;
+                db.Entry(shop).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(magazine);
+            return View(shop);
         }
 
         //
         // GET: /Shop/Delete/5
-
+ 
         public ActionResult Delete(int id)
         {
-            Shop magazine = db.Shops.Find(id);
-            return View(magazine);
+            Shop shop = db.Shops.Find(id);
+            return View(shop);
         }
 
         //
@@ -89,9 +93,9 @@ namespace Seller.Controllers
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
-        {
-            Shop magazine = db.Shops.Find(id);
-            db.Shops.Remove(magazine);
+        {            
+            Shop shop = db.Shops.Find(id);
+            db.Shops.Remove(shop);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

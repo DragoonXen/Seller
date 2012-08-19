@@ -30,7 +30,7 @@ namespace Seller.Models
         public string Email { get; set; }
 
         [Required]
-        public int Course { get; set; }
+        public int Exchange { get; set; }
 
         public string Image { get; set; }
 

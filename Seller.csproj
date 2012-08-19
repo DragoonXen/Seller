@@ -41,6 +41,9 @@
       <HintPath>..\..\libs\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\..\libs\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -67,8 +70,8 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\MagazineController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="DAL\DataContext.cs" />
     <Compile Include="DAL\DataInitializer.cs" />
     <Compile Include="Global.asax.cs">
@@ -85,6 +88,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\Style\Asc.png" />
+    <Content Include="Content\Images\Style\Desc.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -155,7 +160,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\Images\" />
+    <Folder Include="Content\Images\Producers\" />
+    <Folder Include="Content\Images\Products\" />
+    <Folder Include="Content\Images\Shops\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
@@ -166,11 +173,24 @@
     <Content Include="Views\Roles\Index.cshtml" />
     <Content Include="Views\Roles\BrowseRole.cshtml" />
     <Content Include="Views\Roles\UserDetails.cshtml" />
-    <Content Include="Views\Magazine\Index.cshtml" />
-    <Content Include="Views\Magazine\Details.cshtml" />
-    <Content Include="Views\Magazine\Create.cshtml" />
-    <Content Include="Views\Magazine\Edit.cshtml" />
-    <Content Include="Views\Magazine\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Products\BrowseProduct.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

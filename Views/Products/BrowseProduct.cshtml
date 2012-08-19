@@ -1,0 +1,58 @@
+﻿@using Seller.Models
+@model Seller.Models.Product
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@Model.Name</h2>
+<p>Type: @Model.Category.Name</p>
+<p>Producer: @Model.Producer.Name</p>
+<p>@Model.Description</p>
+@foreach (Image a in Model.Images)
+{
+    <img alt="Picture" src="/Content/Images/Products/@a.Path" class="gallery" />
+}
+<div class="clear"><p><a href="/" onclick=" javascript:history.go(-1); return false; ">Back</a></p></div>
+@if (Model.Offers.Count != 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Price</th>
+                <th>Logo</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Site</th>
+                <th>E-mail</th>
+                <th>Description</th>
+                <th>Address</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Offer a in Model.Offers.OrderByDescending(offer => offer.LastUpdate))
+            {
+                <tr>
+                    <td class="nowrap">
+                        @a.Price $ <br/>
+                        @{ int rub = a.Price*a.Shop.Exchange; }
+                        @rub
+                    </td>
+                    <td><img class="gallery" alt="logo" src="/Content/Images/Shops/@a.Shop.Image"/></td>
+                    <td>@a.Shop.Name</td>
+                    <td class="nowrap">@a.Shop.Phone</td>
+                    <td class="nowrap">@a.Shop.Site</td>
+                    <td class="nowrap">@a.Shop.Email</td>
+                    <td>@a.Shop.Description</td>
+                    <td>@a.Shop.Adress</td>
+                    <td>@a.LastUpdate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No offers of this product</p>
+}

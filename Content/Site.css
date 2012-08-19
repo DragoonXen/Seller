@@ -18,7 +18,7 @@ a:link {
 }
 
 a:visited {
-    color: #505abc;
+    color: #034af3;
 }
 
 a:hover {
@@ -78,6 +78,7 @@ h5, h6 {
 page width. Or, you can specify an exact pixel width. */
 .page {
     width: 90%;
+    min-width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -323,12 +324,25 @@ div#title {
 .tri-state {
     width: 6em;
 }
-
+/* ------------------- Custom styles ---------------------*/
 .gallery {
     float: left;
-    width: 250px;
+    max-width: 250px;
+    margin: 5px;
 }
 
-h2 {
-    clear: both;
+tbody tr:hover {
+    background-color: #add6ff;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.maxWidth {
+    width: 100%;
+}
+
+.action_link {
+    margin: 5px 0;
 }

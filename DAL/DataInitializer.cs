@@ -7,7 +7,7 @@ using Seller.Models;
 
 namespace Seller.DAL
 {
-    public class DataInitializer : DropCreateDatabaseAlways<DataContext>
+    public class DataInitializer : DropCreateDatabaseIfModelChanges<DataContext>
     {
         protected override void Seed(DataContext context)
         {
@@ -22,7 +22,7 @@ namespace Seller.DAL
                                         Name = "Sli.by",
                                         Phone = "+375 29 576 66 44",
                                         Email = "price@sli.by",
-                                        Course = 8420,
+                                        Exchange = 8420,
                                         Site = "Sli.by",
                                         Image = "SLI.gif",
                                         Description = @"Есть возможность оплаты заказа по Webmoney!
@@ -45,7 +45,7 @@ namespace Seller.DAL
                                         Phone = "+375 29 566 19 81",
                                         Adress = "г.Минск, ул.Сурганова, д.27 оф.5 (ст. метро \"Академия наук\")",
                                         Email = "uni-1@tut.by",
-                                        Course = 8500,
+                                        Exchange = 8500,
                                         Image = "UNI.gif",
                                         Description =
                                             @"Продажа компьютеров, ноутбуков, комплектующих, периферии за наличный и безналичный рассчет.
@@ -60,7 +60,7 @@ namespace Seller.DAL
                                         Name = "StarSys",
                                         Phone = "+375 29 754 91 11",
                                         Email = "Star-sys@mail.ru",
-                                        Course = 8400,
+                                        Exchange = 8400,
                                         Site = "www.star-sys.shop.by",
                                         Image = "StarSys.gif",
                                         Description =
@@ -72,7 +72,7 @@ namespace Seller.DAL
                                         Phone = "+375 29 705 63 05",
                                         Adress = "г.Минск ул.Кульман 2 офис 422",
                                         Email = "def.wsm@gmail.com",
-                                        Course = 8500,
+                                        Exchange = 8500,
                                         Site = "e2.by",
                                         Image = "e2.by.gif",
                                         Description = @"*понедельник - пятница с 12.00 до 19.00 . 
@@ -97,7 +97,7 @@ namespace Seller.DAL
                                         Phone = "+375 33 665 05 19",
                                         Adress = "г. Минск, ул. Захарова 24, оф. 3п",
                                         Email = "shop@atom.by",
-                                        Course = 8500,
+                                        Exchange = 8500,
                                         Site = "atom.by",
                                         Image = "Atom+.gif",
                                         Description =
