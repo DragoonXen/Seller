@@ -346,3 +346,15 @@ tbody tr:hover {
 .action_link {
     margin: 5px 0;
 }
+
+.descriptionInput {
+    width: 600px;
+    height: 80px;
+}
+
+.notApproved:hover {
+    background-color: #e0f0ff;    
+}
+.notApproved a{
+    color: #87a7f3;
+}

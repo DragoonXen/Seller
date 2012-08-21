@@ -25,6 +25,7 @@ namespace Seller.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
+                    Session.Abandon();
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -52,7 +53,7 @@ namespace Seller.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-
+            Session.Abandon();
             return RedirectToAction("Index", "Products");
         }
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 using Seller.DAL;
+using Seller.Utils;
 using log4net;
 
 namespace Seller
@@ -14,6 +17,7 @@ namespace Seller
     public class MvcApplication : HttpApplication
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (MvcApplication).FullName);
+        private static readonly DataContext DBContext = new DataContext();
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -40,6 +44,22 @@ namespace Seller
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        protected void Session_Start(object sender, EventArgs e)
+        {
+            if (Roles.GetRolesForUser().Any(role => Helper.Roles.ShopsRoles.Contains(role)))
+            {
+                var userGuid = (Guid) Membership.GetUser().ProviderUserKey;
+                HttpContext.Current.Session[Helper.ShopId] =
+                    DBContext.Shops.Single(shop => shop.AccountGuid == userGuid).
+                        ShopId;
+                Log.InfoFormat("Shop {0} logged in", userGuid);
+            }
+            else
+            {
+                HttpContext.Current.Session[Helper.ShopId] = null;
+            }
         }
 
         protected void Application_Error(Object sender, EventArgs e)

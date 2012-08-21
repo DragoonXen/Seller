@@ -1,9 +1,14 @@
-﻿@using Seller
-@using Seller.Controllers
+﻿@using Seller.Controllers
 @using Seller.Models
+@using Seller.Utils
 @model PagedList.IPagedList<Seller.Models.Product>
 @{
     ViewBag.Title = "Catalog";
+    int shopId = -1;
+    if (Session[Helper.ShopId] != null)
+    {
+        shopId = (int) Session[Helper.ShopId];
+    }
 }
 
 <h2>Catalog</h2>
@@ -17,11 +22,11 @@
             if (recordId != '') {
                 $.post("/Products/BrowseProduct", { "id": recordId },
                     function(htmlData) {
-                        var productBrowse = $("#productBrowse").fadeTo(500, 0.01, function() {
+                        var productBrowse = $("#productBrowse").fadeTo(300, 0.01, function() {
                             productBrowse.empty();
                             productBrowse.append(htmlData);
-                            productBrowse.fadeTo(500, 1, function () {
-                                 $('html,body').animate({scrollTop: $(this).offset().top}, 500);
+                            productBrowse.fadeTo(300, 1, function() {
+                                $('html,body').animate({ scrollTop: $(this).offset().top }, 300);
                             });
                         });
 
@@ -36,21 +41,23 @@
 {
     <input type="hidden" name="sortOrder" value="@ViewBag.Order"/>
     <input type="hidden" name="pageSize" value="@Model.PageSize"/>
-    @Html.DropDownList("category", (IEnumerable<SelectListItem>) ViewBag.categories,
-                       new
-                           {
-                               onchange = "document.getElementById('indexForm').submit()"
-                           })
-    if (Helper.Roles.RolesArray.Any(role => User.IsInRole(role)))
+        <input type="text" name="filter" value="@ViewBag.filter"/>
+    @Html.DropDownList("category", (IEnumerable<SelectListItem>)ViewBag.categories, Helper.EmptySelectItem,
+    new
+                       {
+                           onchange = "document.getElementById('indexForm').submit()"
+                       })
+    <input type="submit" value="Filter" />
+    if (Helper.Roles.AllRoles.Any(role => User.IsInRole(role)))
     {
         <p>
-            @Html.ActionLink("Create New", "Create")
+            @Html.ActionLink("Create New", "Create", "ProductManager")
         </p>
     }
     <table class="maxWidth">
         <thead>
             <tr>
-                <th>@Html.ActionLink("Name", "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.NameOrder})
+                <th>@Html.ActionLink("Name", "Index", new { pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.NameOrder })
                     @if (ViewBag.Order == ProductsController.SortOrderName)
                     {
                         <img alt="asc" src="/Content/Images/Style/Asc.png"/>
@@ -66,7 +73,7 @@
                 }
                 <th>Producer</th>
                 <th>Description</th>
-                <th>@Html.ActionLink("Price", "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.Priceorder})
+                <th>@Html.ActionLink("Price", "Index", new { pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.Priceorder })
                     @if (ViewBag.Order == ProductsController.SortOrderPrice)
                     {
                         <img alt="asc" src="/Content/Images/Style/Asc.png"/>
@@ -76,12 +83,19 @@
                         <img alt="asc" src="/Content/Images/Style/Desc.png"/>
                     }
                 </th>
+                @if (shopId != -1)
+                {
+                    <th>
+                        Your offer
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
             @foreach (Product product in Model)
             {
-                <tr>
+                string approovedName = product.Approved ? "approved" : "notApproved";
+                <tr class="@approovedName">
                     <td><a href="/Products/BrowseProduct?id=@product.ProductId" class="product_name" data-id="@product.ProductId">@product.Name</a></td>
                     @if (ViewBag.category == null)
                     {
@@ -89,7 +103,26 @@
                     }
                     <td>@product.Producer.Name</td>
                     <td>@product.Description</td>
-                    <td class="nowrap">@product.Offers.Min(offer => offer.Price) - @product.Offers.Max(offer => offer.Price)</td>
+                    <td class="nowrap">
+                        @if (product.Offers.Count > 0)
+                        {
+                            @product.Offers.Min(offer => offer.Price)
+                            @:-
+                            @product.Offers.Max(offer => offer.Price)
+                        }
+                    </td>
+                    @if (shopId != -1)
+                    {
+                        <td>
+                            @{
+                        Offer off = product.Offers.Where(offer => offer.ShopId == shopId).SingleOrDefault();
+                        if (off != null)
+                        {
+                                    @off.Price
+                        }
+                            }
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -101,9 +134,9 @@
      
         @if (Model.HasPreviousPage)
         {
-            @Html.ActionLink("<<", "Index", new {page = 1, pageSize = Model.PageSize})
+            @Html.ActionLink("<<", "Index", new { page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
             @Html.Raw(" ")
-            @Html.ActionLink("< Prev", "Index", new {page = Model.PageNumber - 1, pageSize = Model.PageSize})
+            @Html.ActionLink("< Prev", "Index", new { page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
         }
         else
         {
@@ -112,9 +145,9 @@
      
         @if (Model.HasNextPage)
         {
-            @Html.ActionLink("Next >", "Index", new {page = Model.PageNumber + 1, pageSize = Model.PageSize})
+            @Html.ActionLink("Next >", "Index", new { page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
             @Html.Raw(" ")
-            @Html.ActionLink(">>", "Index", new {page = Model.PageCount, pageSize = Model.PageSize})
+            @Html.ActionLink(">>", "Index", new { page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
         }
         else
         {
@@ -123,11 +156,11 @@
     </div>
     <div>
         <p>Users per page:
-            @Html.ActionLink("5", "Index", new {pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("10", "Index", new {pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("20", "Index", new {pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("50", "Index", new {pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("All", "Index", new {pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("5", "Index", new { pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("10", "Index", new { pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("20", "Index", new { pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("50", "Index", new { pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("All", "Index", new { pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order })
         </p>
     </div>
 }

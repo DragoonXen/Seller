@@ -1,0 +1,30 @@
+﻿@model Seller.Models.Producer
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Producer</legend>
+
+    <div class="display-label">Name</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">Site</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Site)
+    </div>
+
+    <div class="display-label">LogoPath</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LogoPath)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ProducerId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

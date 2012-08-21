@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Web.Security;
 using Seller.Models;
+using Seller.Utils;
 
 namespace Seller.DAL
 {
@@ -557,6 +558,7 @@ namespace Seller.DAL
             foreach (Product product in products)
             {
                 product.CreatedBy = (Guid) users[seedRandom.Next(users.Length)].ProviderUserKey;
+                product.Approved = true;
                 context.Products.Add(product);
             }
 
