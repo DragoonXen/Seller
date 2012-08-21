@@ -103,42 +103,15 @@ namespace Seller.Controllers
                 (from a in db.Products.Include("Offers.Shop").Include("Category").Include("Images").Include("Producer")
                  where a.ProductId == id
                  select a).SingleOrDefault();
-            return View(product);
-        }
-
-        [HttpPost]
-        public ActionResult BrowseProduct(FormCollection formCollection, int id)
-        {
-            Product product =
-                (from a in db.Products.Include("Offers.Shop").Include("Category").Include("Images").Include("Producer")
-                 where a.ProductId == id
-                 select a).SingleOrDefault();
-            if (product == null)
+            if (Request.RequestType.ToUpper() == "POST")
             {
-                return Json("");
+                return PartialView(product);
+                
+            } else
+            {
+                return View(product);
             }
-            var data = new Dictionary<string, object>();
-            data["Name"] = product.Name;
-            data["Producer"] = product.Producer.Name;
-            data["Type"] = product.Category.Name;
-            data["Description"] = product.Description ?? "";
-            data["Images"] = from img in product.Images select img.Path;
-            data["Offers"] = from offer in product.Offers
-                             select
-                                 new
-                                     {
-                                         offer.Price,
-                                         Logo = offer.Shop.Image,
-                                         offer.Shop.Name,
-                                         Phone = offer.Shop.Phone ?? "",
-                                         Site = offer.Shop.Site ?? "",
-                                         offer.Shop.Email,
-                                         Description = offer.Shop.Description ?? "",
-                                         Adress = offer.Shop.Adress ?? "",
-                                         offer.Shop.Exchange,
-                                         LastUpdate = offer.LastUpdate.ToShortDateString()
-                                     };
-            return Json(data);
+            
         }
     }
 }

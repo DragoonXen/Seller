@@ -13,10 +13,10 @@ namespace Seller
         {
             public const string Administrator = "Administrator";
             public const string Moderator = "Moderator";
-            public const string Magazine = "Shop";
+            public const string Shop = "Shop";
 
             public static readonly ReadOnlyCollection<string> RolesArray =
-                new ReadOnlyCollection<string>(new List<string> {Administrator, Moderator, Magazine});
+                new ReadOnlyCollection<string>(new List<string> {Administrator, Moderator, Shop});
 
             public static void CheckRoles()
             {

@@ -118,8 +118,8 @@ namespace Seller.DAL
                 if ((user = Membership.GetUser(shop.Name)) == null)
                     user = Membership.CreateUser(shop.Name, "test`12" + shop.Name);
 
-                if (!Roles.IsUserInRole(user.UserName, Helper.Roles.Magazine))
-                    Roles.AddUserToRole(user.UserName, Helper.Roles.Magazine);
+                if (!Roles.IsUserInRole(user.UserName, Helper.Roles.Shop))
+                    Roles.AddUserToRole(user.UserName, Helper.Roles.Shop);
 
                 shop.AccountGuid = (Guid) user.ProviderUserKey;
                 context.Shops.Add(shop);

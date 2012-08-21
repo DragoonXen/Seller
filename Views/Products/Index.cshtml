@@ -10,46 +10,16 @@
 
 <script type="text/javascript">
     $(function() {
-        $(".product_name").click(function() {
+        $(".product_name").click(function(e) {
+            e = e || window.Event || window.event;
+            if (e && e.button == 1) return true;
             var recordId = $(this).attr("data-id");
             if (recordId != '') {
                 $.post("/Products/BrowseProduct", { "id": recordId },
-                    function(product) {
+                    function(htmlData) {
                         var productBrowse = $("#productBrowse").fadeTo(500, 0.01, function() {
-                            var dataDiv = jQuery('<div/>');
-                            dataDiv.append("<h2>" + product.Name + "</h2>");
-                            dataDiv.append("<p>Type: " + product.Type + "</p>");
-                            dataDiv.append("<p>Producer: " + product.Producer + "</p>");
-                            dataDiv.append("<p>" + product.Description + "</p>");
-                            for (var i = 0; i < product.Images.length; i++) {
-                                dataDiv.append("<img alt=\"Picture\" src=\"/Content/Images/Products/" + product.Images[i] + "\" class=\"gallery\" />");
-                            }
-                            var offersDiv = jQuery('<div/>', {
-                                class: 'clear',
-                            });
-                            if (product.Offers.length == 0) {
-                                offersDiv.append("<p>No offers of this product</p>");
-                            } else {
-                                var appendTable = "<table class=\"maxWidth\"><thead><tr><th>Price</th><th>Logo</th><th>Name</th><th>Phone</th><th>Site</th><th>E-mail</th><th>Description</th><th>Address</th><th>Last Updated</th></tr></thead><tbody>";
-                                var offers = product.Offers;
-                                for (i = 0; i < offers.length; i++) {
-                                    var rub = offers[i].Price * offers[i].Exchange;
-                                    appendTable += "<tr><td class=\"nowrap\">" + offers[i].Price + "$ <br/>" + rub + "</td>";
-                                    appendTable += "<td><img class=\"gallery\" alt=\"logo\" src=\"/Content/Images/Shops/" + offers[i].Logo + "\"/></td>";
-                                    appendTable += "<td>" + offers[i].Name + "</td>";
-                                    appendTable += "<td class=\"nowrap\">" + offers[i].Phone + "</td>";
-                                    appendTable += "<td class=\"nowrap\">" + offers[i].Site + "</td>";
-                                    appendTable += "<td class=\"nowrap\">" + offers[i].Email + "</td>";
-                                    appendTable += "<td>" + offers[i].Description + "</td>";
-                                    appendTable += "<td>" + offers[i].Adress + "</td>";
-                                    appendTable += "<td>" + offers[i].LastUpdate + "</td></tr>";
-                                }
-                                appendTable += "</tbody></table>";
-                                offersDiv.append(appendTable);
-                            }
-                            offersDiv.appendTo(dataDiv);
                             productBrowse.empty();
-                            productBrowse.append(dataDiv);
+                            productBrowse.append(htmlData);
                             productBrowse.fadeTo(500, 1, function () {
                                  $('html,body').animate({scrollTop: $(this).offset().top}, 500);
                             });
