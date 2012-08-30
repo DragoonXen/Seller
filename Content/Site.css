@@ -358,3 +358,7 @@ tbody tr:hover {
 .notApproved a{
     color: #87a7f3;
 }
+
+#productNameInput {
+    width: 400px;
+}

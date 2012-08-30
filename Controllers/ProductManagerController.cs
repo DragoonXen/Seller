@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -18,8 +17,7 @@ namespace Seller.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.CategoryID = PrepareCategorySelectList(_db.Categories.ToList());
-            ViewBag.ProducerID = PrepareProducerSelectList(_db.Producers.ToList());
+            PrepareSelectLists();
             return View();
         }
 
@@ -29,14 +27,12 @@ namespace Seller.Controllers
             product.CreatedBy = (Guid) Membership.GetUser().ProviderUserKey;
             if (ModelState.IsValid)
             {
-                product.Approved = Helper.Roles.TrustedRoles.Any(role => User.IsInRole(role));
                 _db.Products.Add(product);
                 _db.SaveChanges();
                 return RedirectToAction("Index", "Products");
             }
 
-            ViewBag.CategoryId = PrepareCategorySelectList(_db.Categories.ToList());
-            ViewBag.ProducerId = PrepareProducerSelectList(_db.Producers.ToList());
+            PrepareSelectLists();
             return View(product);
         }
 
@@ -44,6 +40,11 @@ namespace Seller.Controllers
         public ActionResult Edit(int id)
         {
             Product product = _db.Products.Find(id);
+
+            if (product == null)
+                return View("Error");
+
+            PrepareSelectLists();
             return View(product);
         }
 
@@ -55,15 +56,22 @@ namespace Seller.Controllers
             {
                 _db.Entry(product).State = EntityState.Modified;
                 _db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Products");
             }
+            PrepareSelectLists();
             return View(product);
         }
 
         [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
         public ActionResult Delete(int id)
         {
-            Product product = _db.Products.Find(id);
+            Product product =
+                _db.Products.Include("Category").Include("Producer").Include("Images").SingleOrDefault(
+                    item => item.ProductId == id);
+
+            if (product == null)
+                return View("Error");
+
             return View(product);
         }
 
@@ -72,9 +80,49 @@ namespace Seller.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = _db.Products.Find(id);
+            if (product == null)
+                return View("Error");
+
             _db.Products.Remove(product);
             _db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Products");
+        }
+
+        [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
+        public ActionResult SetApproved(int id, bool approved)
+        {
+            if (ChangeApprovedState(id, approved))
+            {
+                return RedirectToAction("Index", "Products");
+            }
+            else
+            {
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
+        public bool SetApproved(FormCollection formCollection, int id, bool approved)
+        {
+            return ChangeApprovedState(id, approved);
+        }
+
+        private bool ChangeApprovedState(int id, bool approved)
+        {
+            Product product = _db.Products.Find(id);
+            if (product == null || product.Approved == approved)
+                return false;
+            product.Approved = approved;
+            _db.SaveChanges();
+            return true;
+        }
+
+
+        private void PrepareSelectLists()
+        {
+            ViewBag.CategoryID = PrepareCategorySelectList(_db.Categories.ToList());
+            ViewBag.ProducerID = PrepareProducerSelectList(_db.Producers.ToList());
         }
 
         private SelectList PrepareCategorySelectList(IEnumerable<Category> categoryList)
