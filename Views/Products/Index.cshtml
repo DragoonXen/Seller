@@ -5,6 +5,8 @@
 @{
     ViewBag.Title = "Catalog";
     int shopId = -1;
+    bool isUserModerator = Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role));
+    bool isTrustedUser = isUserModerator || Helper.Roles.TrustedRoles.Any(role => User.IsInRole(role));
     if (Session[Helper.ShopId] != null)
     {
         shopId = (int) Session[Helper.ShopId];
@@ -14,17 +16,22 @@
 <h2>Catalog</h2>
 
 <script type="text/javascript">
+    MOUSE_BUTTON_MIDDLE = 1;
+    $.ajaxSetup({
+        error: function(e) {
+            alert('oops! we have an error:\n' + e);
+        }
+    });
     $(function() {
         $(".product_name").click(function(e) {
             e = e || window.Event || window.event;
-            if (e && e.button == 1) return true;
+            if (e && e.button == MOUSE_BUTTON_MIDDLE) return true;
             var recordId = $(this).attr("data-id");
             if (recordId != '') {
                 $.post("/Products/BrowseProduct", { "id": recordId },
                     function(htmlData) {
                         var productBrowse = $("#productBrowse").fadeTo(300, 0.01, function() {
-                            productBrowse.empty();
-                            productBrowse.append(htmlData);
+                            productBrowse.html(htmlData);
                             productBrowse.fadeTo(300, 1, function() {
                                 $('html,body').animate({ scrollTop: $(this).offset().top }, 300);
                             });
@@ -35,24 +42,21 @@
             return false;
         });
     });
-    $(function () {
-        $(".approve_link").click(function (e) {
+    $(function() {
+        $(".approve_link").click(function(e) {
             e = e || window.Event || window.event;
-            if (e && e.button == 1) return true;
-            var control = this;
+            if (e && e.button == MOUSE_BUTTON_MIDDLE) return true;
+            var control = $(this);
             var url = this.href;
-            $.post(this.href, function (result) {
+            $.post(this.href, function(result) {
                 if (result == 'True') {
-                    var state = (control.text == "Approve");
-                    control.href = url.substring(0, url.lastIndexOf("=") + 1) + (!state);
+                    var state = (control.attr("text") == "Approve");
 
-                    $(control).empty().append(state ? "Disapprove" : "Approve");
-                    
-                    control = control.parentNode;
-                    while (control.nodeName != "TR")
-                        control = control.parentNode;
-                    
-                    control.className = state ? "approved" : "notApproved";
+                    control.attr("href", url.substring(0, url.lastIndexOf("=") + 1) + (!state));
+
+                    control.html(state ? "Disapprove" : "Approve");
+
+                    control.closest("tr").attr("class", state ? "approved" : "notApproved");
                 }
             });
             return false;
@@ -70,7 +74,7 @@
                            {
                                onchange = "document.getElementById('indexForm').submit()"
                            })
-    <input type="submit" value="Filter" />
+    <noscript><input type="submit" value="Filter" /></noscript>
     if (Helper.Roles.AllRoles.Any(role => User.IsInRole(role)))
     {
         <p>
@@ -106,15 +110,15 @@
                         <img alt="asc" src="/Content/Images/Style/Desc.png"/>
                     }
                 </th>
-                @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
-                {
-                    <th>Approve</th>
-                }
                 @if (shopId != -1)
                 {
                     <th>
                         Your offer
                     </th>
+                }
+                @if (isTrustedUser)
+                {
+                    <th>Actions</th>
                 }
             </tr>
         </thead>
@@ -138,13 +142,6 @@
                             @product.Offers.Max(offer => offer.Price)
                         }
                     </td>
-                    @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
-                    {
-                        string url = @String.Format("/ProductManager/SetApproved?id={0}&approved={1}", product.ProductId, !product.Approved);
-                        <td>
-                            <a class="approve_link" href="@url">@(product.Approved ? "Disapprove" : "Approve")</a>
-                        </td>
-                    }
                     @if (shopId != -1)
                     {
                         <td>
@@ -154,6 +151,21 @@
                                 {
                                     @off.Price
                                 }
+                            }
+                        </td>
+                    }
+                    @if (isTrustedUser)
+                    {
+                        <td>
+                            @if (isUserModerator)
+                            {
+                                string url = @String.Format("/ProductManager/SetApproved?id={0}&approved={1}", product.ProductId, !product.Approved);
+                                <a class="approve_link" href="@url">@(product.Approved ? "Disapprove" : "Approve")</a><br/>
+                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a><br/>
+                                <a href="/ProductManager/Delete?id=@product.ProductId">Delete</a>
+                            } else
+                            {
+                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a>
                             }
                         </td>
                     }
@@ -168,9 +180,9 @@
      
         @if (Model.HasPreviousPage)
         {
-            @Html.ActionLink("<<", "Index", new {page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink("<<", "Index", new { ViewBag.filter, ViewBag.category, page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
             @Html.Raw(" ")
-            @Html.ActionLink("< Prev", "Index", new {page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink("< Prev", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
         }
         else
         {
@@ -179,9 +191,9 @@
      
         @if (Model.HasNextPage)
         {
-            @Html.ActionLink("Next >", "Index", new {page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink("Next >", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
             @Html.Raw(" ")
-            @Html.ActionLink(">>", "Index", new {page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink(">>", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
         }
         else
         {
@@ -190,11 +202,11 @@
     </div>
     <div>
         <p>Users per page:
-            @Html.ActionLink("5", "Index", new {pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("10", "Index", new {pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("20", "Index", new {pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("50", "Index", new {pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("All", "Index", new {pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("5", "Index", new { pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("10", "Index", new { pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("20", "Index", new { pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("50", "Index", new { pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("All", "Index", new { pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order })
         </p>
     </div>
 }
