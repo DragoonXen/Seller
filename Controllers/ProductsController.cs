@@ -18,14 +18,38 @@ namespace Seller.Controllers
 
         private readonly DataContext _db = new DataContext();
 
+        public ActionResult RedirectedBack()
+        {
+            Dictionary<string, object> paramsDictionary = getDictionary();
+            return BuildIndex(getParameter<int?>("category", paramsDictionary),
+                              getParameter<string>("sortOrder", paramsDictionary),
+                              getParameter<int?>("page", paramsDictionary),
+                              getParameter<int?>("pageSize", paramsDictionary),
+                              getParameter<string>("filter", paramsDictionary));
+        }
+
         public ActionResult Index(int? category, string sortOrder, int? page, int? pageSize, string filter)
         {
-            IQueryable<Product> query = from a in _db.Products.Include("Offers").Include("Category").Include("Producer") select a;
+            Dictionary<string, object> paramsDictionary = getDictionary();
+
+            paramsDictionary["filter"] = filter;
+            paramsDictionary["category"] = category;
+            paramsDictionary["sortOrder"] = sortOrder;
+            paramsDictionary["page"] = page;
+            paramsDictionary["pageSize"] = pageSize;
+
+            return BuildIndex(category, sortOrder, page, pageSize, filter);
+        }
+
+        private ActionResult BuildIndex(int? category, string sortOrder, int? page, int? pageSize, string filter)
+        {
+            IQueryable<Product> query = from a in _db.Products.Include("Offers").Include("Category").Include("Producer")
+                                        select a;
             if (!string.IsNullOrWhiteSpace(filter))
                 query = query.Where(product => product.Name.ToUpper().Contains(filter.ToUpper()));
             if (!Roles.GetRolesForUser().Any(role => Helper.Roles.AllRoles.Contains(role)))
                 query = query.Where(product => product.Approved);
-            
+
             #region Category
 
             {
@@ -84,7 +108,7 @@ namespace Seller.Controllers
             bool isUserShop = Roles.GetRolesForUser().Any(role => Helper.Roles.ShopsRoles.Contains(role));
             ViewBag.isUserShop = isUserShop;
 
-            return View(query.ToPagedList(page ?? 1, productsPerPage));
+            return View("Index", query.ToPagedList(page ?? 1, productsPerPage));
         }
 
         public ActionResult BrowseProduct(int id)
@@ -101,6 +125,21 @@ namespace Seller.Controllers
             {
                 return View(product);
             }
+        }
+
+        private Dictionary<string, object> getDictionary()
+        {
+            Dictionary<string, object> paramsDictionary;
+            if ((paramsDictionary = (Dictionary<string, object>) Session["requestParams"]) == null)
+                Session["requestParams"] = paramsDictionary = new Dictionary<string, object>();
+            return paramsDictionary;
+        }
+
+        private T getParameter<T>(string paramName, Dictionary<string, object> dictionary)
+        {
+            object retValue;
+            dictionary.TryGetValue(paramName, out retValue);
+            return (T) retValue;
         }
     }
 }

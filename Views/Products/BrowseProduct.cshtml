@@ -16,7 +16,7 @@
 <div class="clear">
     @if (Request.RequestType.ToUpper() == "GET")
     {
-        <p><a href="/" onclick=" javascript:history.go(-1); return false; ">Back</a></p>
+        <p><a href="/Products/RedirectedBack">Back</a></p>
     }
     @if (Model.Offers.Count != 0)
     {

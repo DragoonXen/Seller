@@ -29,7 +29,7 @@ namespace Seller.Controllers
             {
                 _db.Products.Add(product);
                 _db.SaveChanges();
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("RedirectedBack", "Products");
             }
 
             PrepareSelectLists();
@@ -56,7 +56,7 @@ namespace Seller.Controllers
             {
                 _db.Entry(product).State = EntityState.Modified;
                 _db.SaveChanges();
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("RedirectedBack", "Products");
             }
             PrepareSelectLists();
             return View(product);
@@ -85,7 +85,7 @@ namespace Seller.Controllers
 
             _db.Products.Remove(product);
             _db.SaveChanges();
-            return RedirectToAction("Index", "Products");
+            return RedirectToAction("RedirectedBack", "Products");
         }
 
         [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
@@ -93,7 +93,7 @@ namespace Seller.Controllers
         {
             if (ChangeApprovedState(id, approved))
             {
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("RedirectedBack", "Products");
             }
             else
             {
