@@ -1,0 +1,1 @@
+aspnet_regsql.exe -C "data source=.\SQLEXPRESS;Integrated Security=True;Initial Catalog=Seller" -A all

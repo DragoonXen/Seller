@@ -1,0 +1,48 @@
+﻿@using Seller.Models
+@model IEnumerable<Seller.Models.Offer>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table>
+    <tr>
+        <th>
+            Product
+        </th>
+        <th>
+            Shop
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            LastUpdate
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (Offer item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Shop.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdate)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new {shopId = item.ShopId, productId = item.ProductId})    
+            </td>
+        </tr>
+    }
+
+</table>

@@ -13,13 +13,12 @@ namespace Seller.Models
         [Column(Order = 2)]
         public int ShopId { get; set; }
 
-        [Required]
         public Product Product { get; set; }
 
-        [Required]
         public Shop Shop { get; set; }
 
         [Required]
+        [Range(1, 20000)]
         public int Price { get; set; }
 
         [Required]

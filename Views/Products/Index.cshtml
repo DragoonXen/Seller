@@ -1,4 +1,5 @@
-﻿@using Seller.Controllers
+﻿@using System.Globalization
+@using Seller.Controllers
 @using Seller.Models
 @using Seller.Utils
 @model PagedList.IPagedList<Seller.Models.Product>
@@ -15,54 +16,9 @@
 
 <h2>Catalog</h2>
 
-<script type="text/javascript">
-    MOUSE_BUTTON_MIDDLE = 1;
-    $.ajaxSetup({
-        error: function(e) {
-            alert('oops! we have an error:\n' + e);
-        }
-    });
-    $(function() {
-        $(".product_name").click(function(e) {
-            e = e || window.Event || window.event;
-            if (e && e.button == MOUSE_BUTTON_MIDDLE) return true;
-            var recordId = $(this).attr("data-id");
-            if (recordId != '') {
-                $.post("/Products/BrowseProduct", { "id": recordId },
-                    function(htmlData) {
-                        var productBrowse = $("#productBrowse").fadeTo(300, 0.01, function() {
-                            productBrowse.html(htmlData);
-                            productBrowse.fadeTo(300, 1, function() {
-                                $('html,body').animate({ scrollTop: $(this).offset().top }, 300);
-                            });
-                        });
-
-                    });
-            }
-            return false;
-        });
-    });
-    $(function() {
-        $(".approve_link").click(function(e) {
-            e = e || window.Event || window.event;
-            if (e && e.button == MOUSE_BUTTON_MIDDLE) return true;
-            var control = $(this);
-            var url = this.href;
-            $.post(this.href, function(result) {
-                if (result == 'True') {
-                    var state = (control.attr("text") == "Approve");
-
-                    control.attr("href", url.substring(0, url.lastIndexOf("=") + 1) + (!state));
-
-                    control.html(state ? "Disapprove" : "Approve");
-
-                    control.closest("tr").attr("class", state ? "approved" : "notApproved");
-                }
-            });
-            return false;
-        });
-    });
-</script>
+<script type="text/javascript" src="/Scripts/ajaxSetup.js"></script>
+<script type="text/javascript" src="/Scripts/approve.js"></script>
+<script type="text/javascript" src="/Scripts/browseProductAjax.js"></script>
 
 @using (Html.BeginForm("Index", "Products", FormMethod.Get, new {id = "indexForm"}))
 {
@@ -113,7 +69,7 @@
                 @if (shopId != -1)
                 {
                     <th>
-                        Your offer
+                        Offer
                     </th>
                 }
                 @if (isTrustedUser)
@@ -146,10 +102,13 @@
                     {
                         <td>
                             @{
-                                Offer off = product.Offers.Where(offer => offer.ShopId == shopId).SingleOrDefault();
-                                if (off != null)
+                                Offer off = product.Offers.SingleOrDefault(offer => offer.ShopId == shopId);
+                                if (off!=null)
                                 {
-                                    @off.Price
+                                    @Html.ActionLink(off.Price.ToString(CultureInfo.InvariantCulture), "Edit", "Offer", new { productId = product.ProductId, shopId }, null)    
+                                } else
+                                {
+                                    @Html.ActionLink("NONE", "Create", "Offer", new { productId = product.ProductId, shopId }, null)    
                                 }
                             }
                         </td>
@@ -160,10 +119,13 @@
                             @if (isUserModerator)
                             {
                                 string url = @String.Format("/ProductManager/SetApproved?id={0}&approved={1}", product.ProductId, !product.Approved);
-                                <a class="approve_link" href="@url">@(product.Approved ? "Disapprove" : "Approve")</a><br/>
-                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a><br/>
+                                <a class="approve_link" href="@url">@(product.Approved ? "Disapprove" : "Approve")</a>
+                                <br/>
+                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a>
+                                <br/>
                                 <a href="/ProductManager/Delete?id=@product.ProductId">Delete</a>
-                            } else
+                            }
+                            else
                             {
                                 <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a>
                             }

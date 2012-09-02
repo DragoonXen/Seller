@@ -34,7 +34,7 @@ namespace Seller.Controllers
                 case "Create":
                     if (ModelState.IsValid)
                     {
-                        product.EditedBy = product.CreatedBy = (Guid)Membership.GetUser().ProviderUserKey;
+                        product.EditedBy = product.CreatedBy = (Guid) Membership.GetUser().ProviderUserKey;
                         _db.Products.Add(product);
                         foreach (Image a in product.Images)
                         {
@@ -132,10 +132,12 @@ namespace Seller.Controllers
         [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = _db.Products.Find(id);
+            Product product = _db.Products.Include("Images").SingleOrDefault(item => item.ProductId == id);
             if (product == null)
                 return View("Error");
 
+            foreach(Image a in product.Images)
+                System.IO.File.Delete(a.FullPath);
             _db.Products.Remove(product);
             _db.SaveChanges();
             return RedirectToAction("RedirectedBack", "Products");
@@ -178,10 +180,10 @@ namespace Seller.Controllers
                 String filePath = Guid.NewGuid() + Path.GetExtension(newImage.FileName);
 
                 var newImg = new Image
-                {
-                    ImageId = -1,
-                    Path = filePath
-                };
+                                 {
+                                     ImageId = -1,
+                                     Path = filePath
+                                 };
                 newImage.SaveAs(newImg.FullPath);
                 product.Images.Add(newImg);
             }
@@ -197,7 +199,6 @@ namespace Seller.Controllers
                     System.IO.File.Delete(removedImage.FullPath);
                 product.Images.Remove(removedImage);
             }
-
         }
 
         private void PrepareSelectLists(int selectedCategoryId = -1, int selectedProducerId = -1)

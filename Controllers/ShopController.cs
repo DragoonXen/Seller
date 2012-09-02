@@ -3,9 +3,11 @@ using System.Linq;
 using System.Web.Mvc;
 using Seller.DAL;
 using Seller.Models;
+using Seller.Utils;
 
 namespace Seller.Controllers
 {
+    [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
     public class ShopController : Controller
     {
         private readonly DataContext db = new DataContext();

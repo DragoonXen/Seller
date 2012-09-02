@@ -29,10 +29,17 @@
                 <nav>
                     <ul id="menu">
                         <li>@Html.ActionLink("Products", "Index", "Products")</li>
-                        <!--li>@Html.ActionLink("About", "About", "Home")</li-->
                         @if (User.IsInRole(Helper.Roles.Administrator))
                         {
                             <li>@Html.ActionLink("Manage roles", "Index", "Roles")</li>
+                        }
+                        @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
+                        {
+                            <li>@Html.ActionLink("Manage shops", "Index", "Shop")</li>
+                        }
+                        @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
+                        {
+                            <li>@Html.ActionLink("Manage offers", "Index", "Offer")</li>
                         }
                     </ul>
                 </nav>
