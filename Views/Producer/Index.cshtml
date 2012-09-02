@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Seller.Models.Producer>
+﻿@using Seller.Models
+@model IEnumerable<Seller.Models.Producer>
 
 @{
     ViewBag.Title = "Index";
@@ -24,22 +25,23 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Site)
-        </td>
-        <td>
-            <img alt="logo" class="gallery" src="/Content/Images/Producers/@item.LogoPath"/>
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProducerId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProducerId })
-        </td>
-    </tr>
-}
+    @foreach (Producer item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Site)
+            </td>
+            <td>
+                <img alt="logo" class="gallery" src="/Content/Images/Producers/@item.LogoPath"/>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.ProducerId}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.ProducerId})
+            </td>
+        </tr>
+    }
 
 </table>
