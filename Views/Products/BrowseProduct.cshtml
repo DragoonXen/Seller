@@ -1,4 +1,5 @@
-﻿@using Seller.Models
+﻿@using System.Globalization
+@using Seller.Models
 @model Seller.Models.Product
 
 @{
@@ -20,41 +21,35 @@
     }
     @if (Model.Offers.Count != 0)
     {
-        <table>
-            <thead>
-                <tr>
-                    <th>Price</th>
-                    <th>Logo</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Site</th>
-                    <th>E-mail</th>
-                    <th>Description</th>
-                    <th>Address</th>
-                    <th>Last Updated</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (Offer a in Model.Offers.OrderByDescending(offer => offer.LastUpdate))
+        foreach (Offer a in Model.Offers.OrderByDescending(offer => offer.LastUpdate))
+        {
+            <div class="maxWidth offerPanel">
+                @{ int rub = a.Price*a.Shop.Exchange; }
+                <span class="bold">Price: @a.Price $, @rub rub</span><br/>
+                <img alt="logo" src="/Content/Images/Shops/@a.Shop.Image"/>
+                <div class="bold shop_name maxWidth">@a.Shop.Name</div>
+                @if (!String.IsNullOrWhiteSpace(a.Shop.Phone))
                 {
-                    <tr>
-                        <td class="nowrap">
-                            @a.Price $ <br/>
-                            @{ int rub = a.Price*a.Shop.Exchange; }
-                            @rub
-                        </td>
-                        <td><img class="gallery" alt="logo" src="/Content/Images/Shops/@a.Shop.Image"/></td>
-                        <td>@a.Shop.Name</td>
-                        <td class="nowrap">@a.Shop.Phone</td>
-                        <td class="nowrap">@a.Shop.Site</td>
-                        <td class="nowrap">@a.Shop.Email</td>
-                        <td>@a.Shop.Description</td>
-                        <td>@a.Shop.Adress</td>
-                        <td>@a.LastUpdate.ToShortDateString()</td>
-                    </tr>
+                    @:Phone: @a.Shop.Phone<br/>
                 }
-            </tbody>
-        </table>
+                @if (!String.IsNullOrWhiteSpace(a.Shop.Site))
+                {
+                    @:Site: @a.Shop.Site<br/>
+                }
+                E-mail: @a.Shop.Email<br/>
+                @if (!String.IsNullOrWhiteSpace(a.Shop.Adress))
+                {
+                   @:Address @a.Shop.Adress<br/>
+                }
+                Last update: @a.LastUpdate.ToString(CultureInfo.InvariantCulture)<br/><br/>
+                <div class="maxWidth description">
+                @if (!String.IsNullOrWhiteSpace(a.Shop.Description))
+                {
+                    @a.Shop.Description<br/>
+                }
+                </div>
+            </div>
+        }
     }
     else
     {

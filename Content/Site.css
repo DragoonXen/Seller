@@ -376,3 +376,23 @@ tbody tr:hover {
     text-align: center;
     vertical-align: middle;
 }
+
+.offerPanel {
+    margin-top: 20px;
+    border: #87a7f3 2px solid;
+    font-size: 12pt;
+    padding: 5px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.shop_name {
+    font-size: 18pt;
+    margin: 5px 0;
+}
+
+.description {
+    background-color: #cfddff;
+}
