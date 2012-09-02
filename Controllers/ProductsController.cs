@@ -20,17 +20,17 @@ namespace Seller.Controllers
 
         public ActionResult RedirectedBack()
         {
-            Dictionary<string, object> paramsDictionary = getDictionary();
-            return BuildIndex(getParameter<int?>("category", paramsDictionary),
-                              getParameter<string>("sortOrder", paramsDictionary),
-                              getParameter<int?>("page", paramsDictionary),
-                              getParameter<int?>("pageSize", paramsDictionary),
-                              getParameter<string>("filter", paramsDictionary));
+            Dictionary<string, object> paramsDictionary = GetDictionary();
+            return BuildIndex(GetParameter<int?>("category", paramsDictionary),
+                              GetParameter<string>("sortOrder", paramsDictionary),
+                              GetParameter<int?>("page", paramsDictionary),
+                              GetParameter<int?>("pageSize", paramsDictionary),
+                              GetParameter<string>("filter", paramsDictionary));
         }
 
         public ActionResult Index(int? category, string sortOrder, int? page, int? pageSize, string filter)
         {
-            Dictionary<string, object> paramsDictionary = getDictionary();
+            Dictionary<string, object> paramsDictionary = GetDictionary();
 
             paramsDictionary["filter"] = filter;
             paramsDictionary["category"] = category;
@@ -127,7 +127,7 @@ namespace Seller.Controllers
             }
         }
 
-        private Dictionary<string, object> getDictionary()
+        private Dictionary<string, object> GetDictionary()
         {
             Dictionary<string, object> paramsDictionary;
             if ((paramsDictionary = (Dictionary<string, object>) Session["requestParams"]) == null)
@@ -135,7 +135,7 @@ namespace Seller.Controllers
             return paramsDictionary;
         }
 
-        private T getParameter<T>(string paramName, Dictionary<string, object> dictionary)
+        private T GetParameter<T>(string paramName, Dictionary<string, object> dictionary)
         {
             object retValue;
             dictionary.TryGetValue(paramName, out retValue);

@@ -1,0 +1,20 @@
+﻿@using Seller.Models
+@model ICollection<Seller.Models.Image>
+
+<div id="Images">
+    @{
+        int idx = 0;
+        foreach (Image img in Model)
+        {
+            <input id="Images_@(idx)__ImageId" name="Images[@idx].ImageId" type="hidden" value="@img.ImageId" />
+            <input id="Images_@(idx)__Path" name="Images[@idx].Path" type="hidden" value="@img.Path" />
+            <input type="image" class="gallery cancel" src="/Content/Images/Products/@img.Path" alt="remove @img.Path" name="submitButton" value="delete:@img.Path" />
+            idx++;
+        }
+    }
+</div>
+
+<p class="clear">
+    <input type="file" name="newImage" />
+    <input name="submitButton" type="submit" value="Add Picture" class="cancel" />
+</p>

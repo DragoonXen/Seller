@@ -8,7 +8,7 @@ using Seller.Utils;
 
 namespace Seller.DAL
 {
-    public class DataInitializer : DropCreateDatabaseIfModelChanges<DataContext>
+    public class DataInitializer : DropCreateDatabaseAlways<DataContext>
     {
         protected override void Seed(DataContext context)
         {

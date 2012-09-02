@@ -1,4 +1,5 @@
-﻿@model Seller.Models.Product
+﻿@using Seller.Models
+@model Seller.Models.Product
 
 @{
     ViewBag.Title = "Edit";
@@ -9,7 +10,7 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"> </script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "ProductManager", FormMethod.Post, new {enctype = "multipart/form-data"}))
 {
     @Html.ValidationSummary(true)
     <fieldset>
@@ -17,12 +18,13 @@
         
         @Html.HiddenFor(model => model.Approved)
         @Html.HiddenFor(model => model.ProductId)
+        @Html.HiddenFor(model => model.CreatedBy)
 
         <div class="editor-label">
             @Html.LabelFor(model => model.CategoryId, "Category")
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(model => model.CategoryId, (SelectList) ViewBag.CategoryId, Model.CategoryId)
+            @Html.DropDownList("CategoryId")
             @Html.ValidationMessageFor(model => model.CategoryId)
         </div>
 
@@ -30,7 +32,7 @@
             @Html.LabelFor(model => model.ProducerId, "Producer")
         </div>
         <div class="editor-field">
-            @Html.DropDownListFor(model => model.ProducerId, (SelectList) ViewBag.ProducerId, Model.ProducerId)
+            @Html.DropDownList("ProducerId")
             @Html.ValidationMessageFor(model => model.ProducerId)
         </div>
 
@@ -38,7 +40,7 @@
             @Html.LabelFor(model => model.Name)
         </div>
         <div class="editor-field">
-            @Html.TextBoxFor(model => model.Name, new { id = "productNameInput" })
+            @Html.TextBoxFor(model => model.Name, new {id = "productNameInput"})
             @Html.ValidationMessageFor(model => model.Name)
         </div>
 
@@ -49,13 +51,16 @@
             @Html.TextAreaFor(model => model.Description, new {@class = "descriptionInput"})
             @Html.ValidationMessageFor(model => model.Description)
         </div>
+        
+        @Html.Partial("ImagesEditor", Model.Images)
 
-        <p>
-            <input type="submit" value="Save" />
+        <p class="clear">
+            <input name="submitButton" type="submit" value="Save" />
         </p>
+
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "RedirectedBack","Products")
+    @Html.ActionLink("Back to List", "RedirectedBack", "Products")
 </div>

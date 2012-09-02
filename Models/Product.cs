@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Seller.Models
 {
     public class Product
     {
+        public Product()
+        {
+            Images = new Collection<Image>();
+        }
+
         [Key]
         public int ProductId { get; set; }
 
@@ -35,6 +41,9 @@ namespace Seller.Models
 
         [ScaffoldColumn(false)]
         public Guid CreatedBy { get; set; }
+
+        [ScaffoldColumn(false)]
+        public Guid EditedBy { get; set; }
 
         public ICollection<Offer> Offers { get; set; }
     }

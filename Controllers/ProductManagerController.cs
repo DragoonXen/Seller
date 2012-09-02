@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Seller.DAL;
@@ -18,18 +20,34 @@ namespace Seller.Controllers
         public ActionResult Create()
         {
             PrepareSelectLists();
-            return View();
+            return View(new Product());
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(HttpPostedFileBase newImage, Product product, String submitButton)
         {
-            product.CreatedBy = (Guid) Membership.GetUser().ProviderUserKey;
-            if (ModelState.IsValid)
+            switch (submitButton)
             {
-                _db.Products.Add(product);
-                _db.SaveChanges();
-                return RedirectToAction("RedirectedBack", "Products");
+                case "Add Picture":
+                    AddPicture(newImage, product);
+                    break;
+                case "Create":
+                    if (ModelState.IsValid)
+                    {
+                        product.EditedBy = product.CreatedBy = (Guid)Membership.GetUser().ProviderUserKey;
+                        _db.Products.Add(product);
+                        foreach (Image a in product.Images)
+                        {
+                            a.Product = product;
+                            _db.Images.Add(a);
+                        }
+                        _db.SaveChanges();
+                        return RedirectToAction("RedirectedBack", "Products");
+                    }
+                    break;
+                default:
+                    RemovePicture(product, submitButton);
+                    break;
             }
 
             PrepareSelectLists();
@@ -39,26 +57,61 @@ namespace Seller.Controllers
         [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator, Helper.Roles.TrustedShop)]
         public ActionResult Edit(int id)
         {
-            Product product = _db.Products.Find(id);
+            Product product = _db.Products.Include("Images").SingleOrDefault(model => model.ProductId == id);
 
             if (product == null)
                 return View("Error");
 
-            PrepareSelectLists();
+            PrepareSelectLists(product.CategoryId, product.ProducerId);
             return View(product);
         }
 
         [HttpPost]
         [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator, Helper.Roles.TrustedShop)]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(HttpPostedFileBase newImage, Product product, String submitButton)
         {
-            if (ModelState.IsValid)
+            switch (submitButton)
             {
-                _db.Entry(product).State = EntityState.Modified;
-                _db.SaveChanges();
-                return RedirectToAction("RedirectedBack", "Products");
+                case "Add Picture":
+                    AddPicture(newImage, product);
+                    break;
+                case "Save":
+                    if (ModelState.IsValid)
+                    {
+                        product.EditedBy = (Guid) Membership.GetUser().ProviderUserKey;
+                        ICollection<Image> newImages = product.Images.ToList();
+                        Dictionary<String, Image> oldImages =
+                            _db.Images.Where(img => img.ProductId == product.ProductId).ToDictionary(image => image.Path);
+                        foreach (Image a in newImages)
+                        {
+                            if (oldImages.ContainsKey(a.Path))
+                            {
+                                oldImages.Remove(a.Path);
+                                product.Images.Remove(a);
+                            }
+                            else
+                            {
+                                a.Product = product;
+                                _db.Images.Add(a);
+                            }
+                        }
+                        foreach (Image a in oldImages.Values)
+                        {
+                            System.IO.File.Delete(a.FullPath);
+                            _db.Images.Remove(a);
+                        }
+
+                        _db.Entry(product).State = EntityState.Modified;
+                        _db.SaveChanges();
+                        return RedirectToAction("RedirectedBack", "Products");
+                    }
+                    break;
+                default:
+                    RemovePicture(product, submitButton);
+                    break;
             }
-            PrepareSelectLists();
+
+            PrepareSelectLists(product.CategoryId, product.ProducerId);
             return View(product);
         }
 
@@ -118,21 +171,49 @@ namespace Seller.Controllers
             return true;
         }
 
-
-        private void PrepareSelectLists()
+        private static void AddPicture(HttpPostedFileBase newImage, Product product)
         {
-            ViewBag.CategoryID = PrepareCategorySelectList(_db.Categories.ToList());
-            ViewBag.ProducerID = PrepareProducerSelectList(_db.Producers.ToList());
+            if (newImage != null)
+            {
+                String filePath = Guid.NewGuid() + Path.GetExtension(newImage.FileName);
+
+                var newImg = new Image
+                {
+                    ImageId = -1,
+                    Path = filePath
+                };
+                newImage.SaveAs(newImg.FullPath);
+                product.Images.Add(newImg);
+            }
         }
 
-        private SelectList PrepareCategorySelectList(IEnumerable<Category> categoryList)
+        private static void RemovePicture(Product product, string submitButton)
         {
-            return new SelectList(categoryList, "CategoryId", "Name");
+            string path = submitButton.Substring(7); //remove "delete:"
+            Image removedImage = product.Images.SingleOrDefault(img => img.Path == path);
+            if (removedImage != null)
+            {
+                if (removedImage.ImageId < 1)
+                    System.IO.File.Delete(removedImage.FullPath);
+                product.Images.Remove(removedImage);
+            }
+
         }
 
-        private SelectList PrepareProducerSelectList(IEnumerable<Producer> producerList)
+        private void PrepareSelectLists(int selectedCategoryId = -1, int selectedProducerId = -1)
         {
-            return new SelectList(producerList, "ProducerId", "Name");
+            ViewBag.CategoryId = PrepareCategorySelectList(_db.Categories.ToList(), selectedCategoryId);
+            ViewBag.ProducerId = PrepareProducerSelectList(_db.Producers.ToList(), selectedProducerId);
+        }
+
+        private SelectList PrepareCategorySelectList(IEnumerable<Category> categoryList, int categoryId)
+        {
+            return new SelectList(categoryList, "CategoryId", "Name", categoryId);
+        }
+
+        private SelectList PrepareProducerSelectList(IEnumerable<Producer> producerList, int poducerId)
+        {
+            return new SelectList(producerList, "ProducerId", "Name", poducerId);
         }
 
         protected override void Dispose(bool disposing)
