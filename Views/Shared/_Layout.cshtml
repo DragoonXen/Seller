@@ -1,5 +1,4 @@
-﻿@using Seller
-@using Seller.Utils
+﻿@using Seller.Utils
 <!DOCTYPE html>
 <html>
     <head>
@@ -36,10 +35,8 @@
                         @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
                         {
                             <li>@Html.ActionLink("Manage shops", "Index", "Shop")</li>
-                        }
-                        @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
-                        {
                             <li>@Html.ActionLink("Manage offers", "Index", "Offer")</li>
+                            <li>@Html.ActionLink("Manage producers", "Index", "Producer")</li>
                         }
                     </ul>
                 </nav>

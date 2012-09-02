@@ -16,9 +16,9 @@
 
 <h2>Catalog</h2>
 
-<script type="text/javascript" src="/Scripts/ajaxSetup.js"></script>
-<script type="text/javascript" src="/Scripts/approve.js"></script>
-<script type="text/javascript" src="/Scripts/browseProductAjax.js"></script>
+<script type="text/javascript" src="/Scripts/ajaxSetup.js"> </script>
+<script type="text/javascript" src="/Scripts/approve.js"> </script>
+<script type="text/javascript" src="/Scripts/browseProductAjax.js"> </script>
 
 @using (Html.BeginForm("Index", "Products", FormMethod.Get, new {id = "indexForm"}))
 {
@@ -88,7 +88,7 @@
                     {
                         <td>@product.Category.Name</td>
                     }
-                    <td>@product.Producer.Name</td>
+                    <td><a href="/Producer/Details/@product.ProducerId">@product.Producer.Name</a></td>
                     <td>@product.Description</td>
                     <td class="nowrap">
                         @if (product.Offers.Count > 0)
@@ -103,12 +103,13 @@
                         <td>
                             @{
                                 Offer off = product.Offers.SingleOrDefault(offer => offer.ShopId == shopId);
-                                if (off!=null)
+                                if (off != null)
                                 {
-                                    @Html.ActionLink(off.Price.ToString(CultureInfo.InvariantCulture), "Edit", "Offer", new { productId = product.ProductId, shopId }, null)    
-                                } else
+                                    @Html.ActionLink(off.Price.ToString(CultureInfo.InvariantCulture), "Edit", "Offer", new {productId = product.ProductId, shopId}, null)
+                                }
+                                else
                                 {
-                                    @Html.ActionLink("NONE", "Create", "Offer", new { productId = product.ProductId, shopId }, null)    
+                                    @Html.ActionLink("NONE", "Create", "Offer", new {productId = product.ProductId, shopId}, null)
                                 }
                             }
                         </td>
@@ -142,9 +143,9 @@
      
         @if (Model.HasPreviousPage)
         {
-            @Html.ActionLink("<<", "Index", new { ViewBag.filter, ViewBag.category, page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
+            @Html.ActionLink("<<", "Index", new {ViewBag.filter, ViewBag.category, page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
             @Html.Raw(" ")
-            @Html.ActionLink("< Prev", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
+            @Html.ActionLink("< Prev", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
         }
         else
         {
@@ -153,9 +154,9 @@
      
         @if (Model.HasNextPage)
         {
-            @Html.ActionLink("Next >", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
+            @Html.ActionLink("Next >", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
             @Html.Raw(" ")
-            @Html.ActionLink(">>", "Index", new { ViewBag.filter, ViewBag.category, page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order })
+            @Html.ActionLink(">>", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
         }
         else
         {
@@ -164,11 +165,11 @@
     </div>
     <div>
         <p>Users per page:
-            @Html.ActionLink("5", "Index", new { pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order })
-            @Html.ActionLink("10", "Index", new { pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order })
-            @Html.ActionLink("20", "Index", new { pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order })
-            @Html.ActionLink("50", "Index", new { pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order })
-            @Html.ActionLink("All", "Index", new { pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order })
+            @Html.ActionLink("5", "Index", new {pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("10", "Index", new {pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("20", "Index", new {pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("50", "Index", new {pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink("All", "Index", new {pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order})
         </p>
     </div>
 }

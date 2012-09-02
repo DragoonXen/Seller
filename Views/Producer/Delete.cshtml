@@ -1,4 +1,5 @@
-﻿@model Seller.Models.Producer
+﻿@using Seller.Utils
+@model Seller.Models.Producer
 
 @{
     ViewBag.Title = "Delete";
@@ -10,24 +11,23 @@
 <fieldset>
     <legend>Producer</legend>
 
-    <div class="display-label">Name</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Name)
-    </div>
+    Name: @Html.DisplayFor(model => model.Name)<br/>
+    Site: @Html.DisplayFor(model => model.Site)<br/>
+    used @ViewBag.CountUsed times
+    <br/>
+    <img alt="logo" src="/Content/Images/Producers/@Model.LogoPath"/>
 
-    <div class="display-label">Site</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Site)
-    </div>
-
-    <div class="display-label">LogoPath</div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.LogoPath)
-    </div>
 </fieldset>
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     <p>
+        @Html.HiddenFor(model => model.ProducerId)
         <input type="submit" value="Delete" /> |
-        @Html.ActionLink("Back to List", "Index")
+        @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
+        {
+            @Html.ActionLink("Back to index", "Index")
+            @:|
+        }
+        @Html.ActionLink("Back to products", "RedirectedBack", "Products")
     </p>
 }

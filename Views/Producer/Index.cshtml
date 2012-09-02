@@ -7,7 +7,8 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") |
+    @Html.ActionLink("Back to products", "RedirectedBack", "Products")
 </p>
 <table>
     <tr>
@@ -18,7 +19,7 @@
             Site
         </th>
         <th>
-            LogoPath
+            Logo
         </th>
         <th></th>
     </tr>
@@ -32,11 +33,10 @@
             @Html.DisplayFor(modelItem => item.Site)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.LogoPath)
+            <img alt="logo" class="gallery" src="/Content/Images/Producers/@item.LogoPath"/>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ProducerId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProducerId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ProducerId })
         </td>
     </tr>

@@ -24,10 +24,10 @@ namespace Seller.Controllers
         public ActionResult Create(int productId, int shopId)
         {
             return View(new Offer
-                {
-                    ProductId = productId,
-                    ShopId = shopId
-                });
+                            {
+                                ProductId = productId,
+                                ShopId = shopId
+                            });
         }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace Seller.Controllers
         {
             int curShopId = -1;
             if (Session[Helper.ShopId] != null)
-                curShopId = (int)Session[Helper.ShopId];
+                curShopId = (int) Session[Helper.ShopId];
             if (offer.ShopId == curShopId)
             {
                 offer.LastUpdate = DateTime.Now;
@@ -94,6 +94,7 @@ namespace Seller.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [MultiAuthorize(Helper.Roles.Administrator, Helper.Roles.Moderator)]
         public ActionResult DeleteConfirmed(Offer offer)
         {
             int curShopId = -1;
