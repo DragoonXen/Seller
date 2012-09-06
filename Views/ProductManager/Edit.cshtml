@@ -1,11 +1,12 @@
 ﻿@using Seller.Models
+@using ViewRes
 @model Seller.Models.Product
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = Localization.Edit;
 }
 
-<h2>Edit</h2>
+<h2>@Localization.Edit</h2>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"> </script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
@@ -14,14 +15,14 @@
 {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>Product</legend>
+        <legend>@Localization.Product</legend>
         
         @Html.HiddenFor(model => model.Approved)
         @Html.HiddenFor(model => model.ProductId)
         @Html.HiddenFor(model => model.CreatedBy)
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.CategoryId, "Category")
+            @Localization.Category
         </div>
         <div class="editor-field">
             @Html.DropDownList("CategoryId")
@@ -29,7 +30,7 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.ProducerId, "Producer")
+            @Localization.Producer
         </div>
         <div class="editor-field">
             @Html.DropDownList("ProducerId")
@@ -37,7 +38,7 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
+            @Localization.Name
         </div>
         <div class="editor-field">
             @Html.TextBoxFor(model => model.Name, new {id = "productNameInput"})
@@ -45,7 +46,7 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Description)
+            @Localization.Description
         </div>
         <div class="editor-field">
             @Html.TextAreaFor(model => model.Description, new {@class = "descriptionInput"})
@@ -55,12 +56,12 @@
         @Html.Partial("ImagesEditor", Model.Images)
 
         <p class="clear">
-            <input name="submitButton" type="submit" value="Save" />
+            <button name="submitButton" type="submit" value="Save">@Localization.Save</button>
         </p>
 
     </fieldset>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "RedirectedBack", "Products")
+    @Html.ActionLink(Localization.Back_to_products, "RedirectedBack", "Products")
 </div>

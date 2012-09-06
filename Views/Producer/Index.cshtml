@@ -1,26 +1,27 @@
 ﻿@using Seller.Models
+@using ViewRes
 @model IEnumerable<Seller.Models.Producer>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Localization.Index;
 }
 
-<h2>Index</h2>
+<h2>@Localization.Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create") |
-    @Html.ActionLink("Back to products", "RedirectedBack", "Products")
+    @Html.ActionLink(Localization.Create_New, "Create") |
+    @Html.ActionLink(Localization.Back_to_products, "RedirectedBack", "Products")
 </p>
 <table>
     <tr>
         <th>
-            Name
+            @Localization.Name
         </th>
         <th>
-            Site
+            @Localization.Site
         </th>
         <th>
-            Logo
+            @Localization.Logo
         </th>
         <th></th>
     </tr>
@@ -35,11 +36,11 @@
                 @Html.DisplayFor(modelItem => item.Site)
             </td>
             <td>
-                <img alt="logo" class="gallery" src="/Content/Images/Producers/@item.LogoPath"/>
+                <img alt="@Localization.Logo" class="gallery" src="/Content/Images/Producers/@item.LogoPath"/>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {id = item.ProducerId}) |
-                @Html.ActionLink("Delete", "Delete", new {id = item.ProducerId})
+                @Html.ActionLink(Localization.Edit, "Edit", new {id = item.ProducerId}) |
+                @Html.ActionLink(Localization.Delete, "Delete", new { id = item.ProducerId })
             </td>
         </tr>
     }

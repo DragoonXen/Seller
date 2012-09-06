@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using Seller.DAL;
 using log4net;
 
 namespace Seller.Utils
@@ -12,6 +17,27 @@ namespace Seller.Utils
 
         public static readonly string EmptySelectItem = "select any";
         public static readonly string ShopId = "shopId";
+
+        private static readonly DataContext DBContext = new DataContext();
+
+        public static void CheckUser(string userName = null)
+        {
+            string[] userRoles = userName == null
+                                     ? System.Web.Security.Roles.GetRolesForUser()
+                                     : System.Web.Security.Roles.GetRolesForUser(userName);
+            if (userRoles.Any(role => Roles.ShopsRoles.Contains(role)))
+            {
+                var userGuid =
+                    (Guid) (userName == null ? Membership.GetUser() : Membership.GetUser(userName)).ProviderUserKey;
+                HttpContext.Current.Session[ShopId] =
+                    DBContext.Shops.Single(shop => shop.AccountGuid == userGuid).ShopId;
+                Log.InfoFormat("Shop {0} logged in", userGuid);
+            }
+            else
+            {
+                HttpContext.Current.Session[ShopId] = null;
+            }
+        }
 
         #region Nested type: Roles
 

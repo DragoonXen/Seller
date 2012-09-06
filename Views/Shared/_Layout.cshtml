@@ -25,18 +25,19 @@
                 <div id="logindisplay">
                     @Html.Partial("_LogOnPartial")
                 </div>
+                @Html.Partial("Language")
                 <nav>
                     <ul id="menu">
-                        <li>@Html.ActionLink("Products", "Index", "Products")</li>
+                        <li>@Html.ActionLink(ViewRes.Localization.Products, "Index", "Products")</li>
                         @if (User.IsInRole(Helper.Roles.Administrator))
                         {
-                            <li>@Html.ActionLink("Manage roles", "Index", "Roles")</li>
+                            <li>@Html.ActionLink(ViewRes.Localization.Manage_roles, "Index", "Roles")</li>
                         }
                         @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
                         {
-                            <li>@Html.ActionLink("Manage shops", "Index", "Shop")</li>
-                            <li>@Html.ActionLink("Manage offers", "Index", "Offer")</li>
-                            <li>@Html.ActionLink("Manage producers", "Index", "Producer")</li>
+                            <li>@Html.ActionLink(ViewRes.Localization.Manage_shops, "Index", "Shop")</li>
+                            <li>@Html.ActionLink(ViewRes.Localization.Manage_offers, "Index", "Offer")</li>
+                            <li>@Html.ActionLink(ViewRes.Localization.Manage_producers, "Index", "Producer")</li>
                         }
                     </ul>
                 </nav>

@@ -1,9 +1,10 @@
-﻿@model string
+﻿@using ViewRes
+@model string
 @{
-    ViewBag.Title = "BrowseRole";
+    ViewBag.Title = Localization.BrowseRole;
 }
 
-<h2>Users in role @Model</h2>
+<h2>@Localization.Users_in_role @Model</h2>
 
 @using (Html.BeginForm("RemoveChecked","Roles"))
 {
@@ -15,5 +16,5 @@
             <li><input type="checkbox" name="selectedUsers" value="@user" /> @user</li>
         }
     </ul>
-    <input type="button" onclick="location.href='/Roles'" value="To index" /> <input type="submit" value="Remove" />
+    <input type="button" onclick="location.href='/Roles'" value="@Localization.Back_to_index" /> <input type="submit" value="@Localization.Delete" />
 }

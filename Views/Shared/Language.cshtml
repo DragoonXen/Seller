@@ -1,0 +1,12 @@
+﻿<div class="lang_div">
+    @using (Html.BeginForm("ChangeLanguage", "Language", FormMethod.Get))
+    {
+        <input type="image" src="/Content/Images/ru_flag.gif" alt="Рсский" name="lang" value="ru" />
+    }
+</div>
+<div class="lang_div">
+    @using (Html.BeginForm("ChangeLanguage", "Language", FormMethod.Get))
+    {
+        <input type="image" src="/Content/Images/uk_flag.gif" alt="English" name="lang" value="en" />
+    }
+</div>

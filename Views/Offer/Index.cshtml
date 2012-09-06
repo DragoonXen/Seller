@@ -1,25 +1,26 @@
 ﻿@using Seller.Models
+@using ViewRes
 @model IEnumerable<Seller.Models.Offer>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Localization.Index;
 }
 
-<h2>Index</h2>
+<h2>@Localization.Index</h2>
 
 <table>
     <tr>
         <th>
-            Product
+            @Localization.Product
         </th>
         <th>
-            Shop
+            @Localization.Shop
         </th>
         <th>
-            Price
+            @Localization.Price
         </th>
         <th>
-            LastUpdate
+            @Localization.Last_update
         </th>
         <th></th>
     </tr>
@@ -40,7 +41,7 @@
                 @Html.DisplayFor(modelItem => item.LastUpdate)
             </td>
             <td>
-                @Html.ActionLink("Delete", "Delete", new {shopId = item.ShopId, productId = item.ProductId})    
+                @Html.ActionLink(Localization.Delete, "Delete", new {shopId = item.ShopId, productId = item.ProductId})    
             </td>
         </tr>
     }

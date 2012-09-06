@@ -1,10 +1,11 @@
-﻿@model MembershipUser
+﻿@using ViewRes
+@model MembershipUser
 
 @{
-    ViewBag.Title = "User roles management";
+    ViewBag.Title = Localization.User_roles_management;
 }
 
-<h2>User roles management</h2>
+<h2>@Localization.User_roles_management</h2>
 
 @Model.UserName
 
@@ -19,5 +20,5 @@
         }
     </ul>
 
-    <input type="submit" value="Update" />
+    <input type="submit" value="@Localization.Update" />
 }

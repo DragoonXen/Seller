@@ -1,8 +1,9 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@using ViewRes
+@{
+    ViewBag.Title = Localization.Index;
 }
 
-<h2>Roles select</h2>
+<h2>@Localization.Roles_select</h2>
 @{
     string[] roles = Roles.GetAllRoles();
     foreach (string role in @roles)
@@ -12,9 +13,9 @@
     <br/>
 }
 
-<h2 class="clear">User select</h2>
+<h2 class="clear">@Localization.User_select</h2>
 
-<div>Total users: @ViewBag.TotalUsers</div>
+<div>@Localization.Total_users: @ViewBag.TotalUsers</div>
 <ul>
     @foreach (MembershipUser user in @ViewBag.Users)
     {
@@ -23,43 +24,44 @@
 </ul>
 
 <div>
-    Page @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber)
-    of @ViewBag.PageCount
+    @Localization.Page @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber)
+    @Localization.of @ViewBag.PageCount
      
     @if (ViewBag.HasPreviousPage)
     {
         @Html.ActionLink("<<", "Index", new {page = 1, pageSize = ViewBag.PageSize})
         @Html.Raw(" ")
         ;
-        @Html.ActionLink("< Prev", "Index", new {page = ViewBag.PageNumber - 1, pageSize = ViewBag.PageSize})
+        @Html.ActionLink("< " + Localization.Previous, "Index", new {page = ViewBag.PageNumber - 1, pageSize = ViewBag.PageSize})
     }
     else
     {
         @:<<
         @Html.Raw(" ")
         ;
-        @:< Prev
+        @:< @Localization.Previous
     }
      
     @if (ViewBag.HasNextPage)
     {
-        @Html.ActionLink("Next >", "Index", new {page = ViewBag.PageNumber + 1, pageSize = ViewBag.PageSize})
+        @Html.ActionLink(Localization.Next + " >", "Index", new {page = ViewBag.PageNumber + 1, pageSize = ViewBag.PageSize})
         @Html.Raw(" ")
         ;
         @Html.ActionLink(">>", "Index", new {page = ViewBag.PageCount, pageSize = ViewBag.PageSize})
     }
     else
     {
-        @:Next >
+        @Localization.Next
+        @:>
         @Html.Raw(" ")
         @:>>
     }
 </div>
 <div>
-    <p>Users per page:
+    <p>@Localization.Users_per_page:
         @Html.ActionLink("5", "Index", new {pageSize = 5})
         @Html.ActionLink("10", "Index", new {pageSize = 10})
         @Html.ActionLink("20", "Index", new {pageSize = 20})
         @Html.ActionLink("50", "Index", new {pageSize = 50})
-        @Html.ActionLink("All", "Index", new {pageSize = 0})</p>
+        @Html.ActionLink(Localization.All, "Index", new {pageSize = 0})</p>
 </div>

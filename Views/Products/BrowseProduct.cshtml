@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using Seller.Models
+@using ViewRes
 @model Seller.Models.Product
 
 @{
@@ -7,17 +8,17 @@
 }
 
 <h2>@Model.Name</h2>
-<p>Type: @Model.Category.Name</p>
-<p>Producer: @Model.Producer.Name</p>
+<p>@Localization.Type: @Model.Category.Name</p>
+<p>@Localization.Producer: @Model.Producer.Name</p>
 <p>@Model.Description</p>
 @foreach (Image a in Model.Images)
 {
-    <img alt="Picture" src="/Content/Images/Products/@a.Path" class="gallery" />
+    <img alt="@Localization.Image" src="/Content/Images/Products/@a.Path" class="gallery" />
 }
 <div class="clear">
     @if (Request.RequestType.ToUpper() == "GET")
     {
-        <p><a href="/Products/RedirectedBack">Back</a></p>
+        <p><a href="/Products/RedirectedBack">@Localization.Back</a></p>
     }
     @if (Model.Offers.Count != 0)
     {
@@ -25,34 +26,34 @@
         {
             <div class="maxWidth offerPanel">
                 @{ int rub = a.Price*a.Shop.Exchange; }
-                <span class="bold">Price: @a.Price $, @rub rub</span><br/>
+                <span class="bold">@Localization.Price: @a.Price $, @rub rub</span><br/>
                 <img alt="logo" src="/Content/Images/Shops/@a.Shop.Image"/>
                 <div class="bold shop_name maxWidth">@a.Shop.Name</div>
                 @if (!String.IsNullOrWhiteSpace(a.Shop.Phone))
                 {
-                    @:Phone: @a.Shop.Phone<br/>
+                    @Localization.Phone@:: @a.Shop.Phone<br/>
                 }
                 @if (!String.IsNullOrWhiteSpace(a.Shop.Site))
                 {
-                    @:Site: @a.Shop.Site<br/>
+                    @Localization.Site@:: @a.Shop.Site<br/>
                 }
-                E-mail: @a.Shop.Email<br/>
+                @Localization.Email: @a.Shop.Email<br/>
                 @if (!String.IsNullOrWhiteSpace(a.Shop.Adress))
                 {
-                   @:Address @a.Shop.Adress<br/>
+                    @Localization.Address@:: @a.Shop.Adress<br/>
                 }
-                Last update: @a.LastUpdate.ToString(CultureInfo.InvariantCulture)<br/><br/>
+                @Localization.Last_update: @a.LastUpdate.ToString(CultureInfo.InvariantCulture)<br/><br/>
                 <div class="maxWidth description">
-                @if (!String.IsNullOrWhiteSpace(a.Shop.Description))
-                {
-                    @a.Shop.Description<br/>
-                }
+                    @if (!String.IsNullOrWhiteSpace(a.Shop.Description))
+                    {
+                        @a.Shop.Description<br/>
+                    }
                 </div>
             </div>
         }
     }
     else
     {
-        <p>No offers of this product</p>
+        <p>@Localization.noOffers</p>
     }
 </div>

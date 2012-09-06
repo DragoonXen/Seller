@@ -1,11 +1,12 @@
 ﻿@using Seller.Utils
+@using ViewRes
 @model Seller.Models.Producer
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = Localization.Edit;
 }
 
-<h2>Edit</h2>
+<h2>@Localization.Edit</h2>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"> </script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
@@ -14,12 +15,12 @@
 {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>Producer</legend>
+        <legend>@Localization.Producer</legend>
 
         @Html.HiddenFor(model => model.ProducerId)
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Name)
+            @Localization.Name
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Name)
@@ -27,24 +28,24 @@
         </div>
 
         <div class="editor-label">
-            @Html.LabelFor(model => model.Site)
+            @Localization.Site
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Site)
             @Html.ValidationMessageFor(model => model.Site)
         </div>
 
-        <img alt="logo" src="/Content/Images/Producers/@Model.LogoPath"/>
+        <img alt="@Localization.Logo" src="/Content/Images/Producers/@Model.LogoPath"/>
         <input id="LogoPath" name="LogoPath" type="hidden" value="@Model.LogoPath" />
         @Html.ValidationMessageFor(model => model.LogoPath)
         
         <p>
             <input type="file" name="newImage"/>
-            <input type="submit" name="submitButtons" value="Apply picture" />
+            <button type="submit" name="submitButtons" value="Apply picture">@Localization.Apply_picture</button>
         </p>
 
         <p>
-            <input type="submit" name="submitButtons" value="Save" />
+            <button type="submit" name="submitButtons" value="Save">@Localization.Save</button>
         </p>
     </fieldset>
 }
@@ -52,9 +53,9 @@
 <div>
     @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
     {
-        @Html.ActionLink("Back to index", "Index")
+        @Html.ActionLink(Localization.Back_to_index, "Index")
         @:|
     }
 
-    @Html.ActionLink("Back to products", "RedirectedBack", "Products")
+    @Html.ActionLink(Localization.Back_to_products, "RedirectedBack", "Products")
 </div>

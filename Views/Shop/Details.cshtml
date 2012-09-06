@@ -1,60 +1,61 @@
-﻿@model Seller.Models.Shop
+﻿@using ViewRes
+@model Seller.Models.Shop
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Localization.Details;
 }
 
-<h2>Details</h2>
+<h2>@Localization.Details</h2>
 
 <fieldset>
-    <legend>Shop</legend>
+    <legend>@Localization.Shop</legend>
 
-    <div class="display-label">Name</div>
+    <div class="display-label">@Localization.Name</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Name)
     </div>
 
-    <div class="display-label">Site</div>
+    <div class="display-label">@Localization.Site</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Site)
     </div>
 
-    <div class="display-label">Phone</div>
+    <div class="display-label">@Localization.Phone</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Phone)
     </div>
 
-    <div class="display-label">Adress</div>
+    <div class="display-label">@Localization.Address</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Adress)
     </div>
 
-    <div class="display-label">Description</div>
+    <div class="display-label">@Localization.Description</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Description)
     </div>
 
-    <div class="display-label">Email</div>
+    <div class="display-label">@Localization.Email</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Email)
     </div>
 
-    <div class="display-label">Exchange</div>
+    <div class="display-label">@Localization.Exchange</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Exchange)
     </div>
 
-    <div class="display-label">Image</div>
+    <div class="display-label">@Localization.Image</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Image)
     </div>
 
-    <div class="display-label">AccountGuid</div>
+    <div class="display-label">@Localization.AccountGuid</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.AccountGuid)
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.ShopId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink(Localization.Edit, "Edit", new {id = Model.ShopId}) |
+    @Html.ActionLink(Localization.Back_to_index, "Index")
 </p>

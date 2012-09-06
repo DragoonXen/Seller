@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Security;
 using Seller.Models;
+using Seller.Utils;
 
 namespace Seller.Controllers
 {
@@ -25,7 +26,7 @@ namespace Seller.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
-                    Session.Abandon();
+                    Helper.CheckUser(model.UserName);
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -39,7 +40,7 @@ namespace Seller.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError("", ViewRes.Localization.Incorrect_password);
                 }
             }
 
@@ -53,7 +54,7 @@ namespace Seller.Controllers
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
-            Session.Abandon();
+            Session.Remove(Helper.ShopId);
             return RedirectToAction("Index", "Products");
         }
 
@@ -130,7 +131,7 @@ namespace Seller.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", ViewRes.Localization.Incorrect_password);
                 }
             }
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -17,7 +19,6 @@ namespace Seller
     public class MvcApplication : HttpApplication
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (MvcApplication).FullName);
-        private static readonly DataContext DBContext = new DataContext();
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -48,18 +49,7 @@ namespace Seller
 
         protected void Session_Start(object sender, EventArgs e)
         {
-            if (Roles.GetRolesForUser().Any(role => Helper.Roles.ShopsRoles.Contains(role)))
-            {
-                var userGuid = (Guid) Membership.GetUser().ProviderUserKey;
-                HttpContext.Current.Session[Helper.ShopId] =
-                    DBContext.Shops.Single(shop => shop.AccountGuid == userGuid).
-                        ShopId;
-                Log.InfoFormat("Shop {0} logged in", userGuid);
-            }
-            else
-            {
-                HttpContext.Current.Session[Helper.ShopId] = null;
-            }
+            Helper.CheckUser();
         }
 
         protected void Application_Error(Object sender, EventArgs e)
@@ -68,6 +58,26 @@ namespace Seller
             Log.ErrorFormat("Request {0} from host {1} send an error:{2}{3}", context.Request,
                             context.Request.UserHostAddress, Environment.NewLine, context.Server.GetLastError());
             //context.ClearError();
+        }
+
+        protected void Application_AcquireRequestState(object sender, EventArgs e)
+        {
+            if (HttpContext.Current.Session != null)
+            {
+                CultureInfo ci = (CultureInfo)this.Session["Culture"];
+                if (ci == null)
+                {
+                    string langName = "ru";
+                    if (HttpContext.Current.Request.UserLanguages != null && HttpContext.Current.Request.UserLanguages.Length != 0)
+                    {
+                        langName = HttpContext.Current.Request.UserLanguages[0].Substring(0, 2);
+                    }
+                    ci = new CultureInfo(langName);
+                    this.Session["Culture"] = ci;
+                }
+                Thread.CurrentThread.CurrentUICulture = ci;
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(ci.Name);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@
         {
             <input id="Images_@(idx)__ImageId" name="Images[@idx].ImageId" type="hidden" value="@img.ImageId" />
             <input id="Images_@(idx)__Path" name="Images[@idx].Path" type="hidden" value="@img.Path" />
-            <input type="image" class="gallery cancel" src="/Content/Images/Products/@img.Path" alt="remove @img.Path" name="submitButton" value="delete:@img.Path" />
+            <input type="image" class="gallery cancel" src="/Content/Images/Products/@img.Path" alt="@ViewRes.Localization.Delete @img.Path" name="submitButton" value="delete:@img.Path" />
             idx++;
         }
     }
@@ -16,5 +16,5 @@
 
 <p class="clear">
     <input type="file" name="newImage" />
-    <input name="submitButton" type="submit" value="Add Picture" class="cancel" />
+    <button name="submitButton" type="submit" value="Add Picture" class="cancel">@ViewRes.Localization.Apply_picture</button>
 </p>

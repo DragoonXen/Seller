@@ -2,9 +2,10 @@
 @using Seller.Controllers
 @using Seller.Models
 @using Seller.Utils
+@using ViewRes
 @model PagedList.IPagedList<Seller.Models.Product>
 @{
-    ViewBag.Title = "Catalog";
+    ViewBag.Title = Localization.Catalog;
     int shopId = -1;
     bool isUserModerator = Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role));
     bool isTrustedUser = isUserModerator || Helper.Roles.TrustedRoles.Any(role => User.IsInRole(role));
@@ -14,10 +15,32 @@
     }
 }
 
-<h2>Catalog</h2>
+<h2>@Localization.Catalog</h2>
 
 <script type="text/javascript" src="/Scripts/ajaxSetup.js"> </script>
-<script type="text/javascript" src="/Scripts/approve.js"> </script>
+<script type="text/javascript">
+    var MOUSE_BUTTON_MIDDLE = 1;
+    $(function () {
+        $(".approve_link").click(function (e) {
+            e = e || window.Event || window.event;
+            if (e && e.button == MOUSE_BUTTON_MIDDLE) return true;
+            var control = $(this);
+            var url = this.href;
+            $.post(this.href, function (result) {
+                if (result == 'True') {
+                    var state = (control.attr("text") == "@Localization.Approve");
+
+                    control.attr("href", url.substring(0, url.lastIndexOf("=") + 1) + (!state));
+
+                    control.html(state ? "@Localization.Disapprove" : "@Localization.Approve");
+
+                    control.closest("tr").attr("class", state ? "approved" : "notApproved");
+                }
+            });
+            return false;
+        });
+    });
+</script>
 <script type="text/javascript" src="/Scripts/browseProductAjax.js"> </script>
 
 @using (Html.BeginForm("Index", "Products", FormMethod.Get, new {id = "indexForm"}))
@@ -25,22 +48,22 @@
     <input type="hidden" name="sortOrder" value="@ViewBag.Order"/>
     <input type="hidden" name="pageSize" value="@Model.PageSize"/>
     <input type="text" name="filter" value="@ViewBag.filter"/>
-    @Html.DropDownList("category", (IEnumerable<SelectListItem>) ViewBag.categories, Helper.EmptySelectItem,
+    @Html.DropDownList("category", (IEnumerable<SelectListItem>) ViewBag.categories, Localization.select_any,
                        new
                            {
                                onchange = "document.getElementById('indexForm').submit()"
                            })
-    <noscript><input type="submit" value="Filter" /></noscript>
+    <noscript><input type="submit" value="@Localization.Filter" /></noscript>
     if (Helper.Roles.AllRoles.Any(role => User.IsInRole(role)))
     {
         <p>
-            @Html.ActionLink("Create New", "Create", "ProductManager")
+            @Html.ActionLink(Localization.Create_New, "Create", "ProductManager")
         </p>
     }
     <table class="maxWidth">
         <thead>
             <tr>
-                <th>@Html.ActionLink("Name", "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.NameOrder})
+                <th>@Html.ActionLink(Localization.Name, "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.NameOrder})
                     @if (ViewBag.Order == ProductsController.SortOrderName)
                     {
                         <img alt="asc" src="/Content/Images/Style/Asc.png"/>
@@ -52,11 +75,11 @@
                 </th>
                 @if (ViewBag.category == null)
                 {
-                    <th>Category</th>
+                    <th>@Localization.Category</th>
                 }
-                <th>Producer</th>
-                <th>Description</th>
-                <th>@Html.ActionLink("Price", "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.Priceorder})
+                <th>@Localization.Producer</th>
+                <th>@Localization.Description</th>
+                <th>@Html.ActionLink(@Localization.Price, "Index", new {pageSize = Model.PageSize, ViewBag.category, sortOrder = ViewBag.Priceorder})
                     @if (ViewBag.Order == ProductsController.SortOrderPrice)
                     {
                         <img alt="asc" src="/Content/Images/Style/Asc.png"/>
@@ -69,12 +92,12 @@
                 @if (shopId != -1)
                 {
                     <th>
-                        Offer
+                        @Localization.Offer
                     </th>
                 }
                 @if (isTrustedUser)
                 {
-                    <th>Actions</th>
+                    <th>@Localization.Actions</th>
                 }
             </tr>
         </thead>
@@ -109,7 +132,7 @@
                                 }
                                 else
                                 {
-                                    @Html.ActionLink("NONE", "Create", "Offer", new {productId = product.ProductId, shopId}, null)
+                                    @Html.ActionLink(Localization.NONE, "Create", "Offer", new {productId = product.ProductId, shopId}, null)
                                 }
                             }
                         </td>
@@ -120,15 +143,15 @@
                             @if (isUserModerator)
                             {
                                 string url = @String.Format("/ProductManager/SetApproved?id={0}&approved={1}", product.ProductId, !product.Approved);
-                                <a class="approve_link" href="@url">@(product.Approved ? "Disapprove" : "Approve")</a>
+                                <a class="approve_link" href="@url">@(product.Approved ? Localization.Disapprove : Localization.Approve)</a>
                                 <br/>
-                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a>
+                                <a href="/ProductManager/Edit?id=@product.ProductId">@Localization.Edit</a>
                                 <br/>
-                                <a href="/ProductManager/Delete?id=@product.ProductId">Delete</a>
+                                <a href="/ProductManager/Delete?id=@product.ProductId">@Localization.Delete</a>
                             }
                             else
                             {
-                                <a href="/ProductManager/Edit?id=@product.ProductId">Edit</a>
+                                <a href="/ProductManager/Edit?id=@product.ProductId">@Localization.Edit</a>
                             }
                         </td>
                     }
@@ -138,38 +161,40 @@
     </table>
     <!-- Paging -->
     <div>
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-        of @Model.PageCount
+        @Localization.Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+        @Localization.of @Model.PageCount
      
         @if (Model.HasPreviousPage)
         {
             @Html.ActionLink("<<", "Index", new {ViewBag.filter, ViewBag.category, page = 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
             @Html.Raw(" ")
-            @Html.ActionLink("< Prev", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink("< " + Localization.Previous, "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber - 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
         }
         else
         {
-            @Html.Raw("<< < Prev")
+            @Html.Raw("<< < ")
+            @Localization.Previous
         }
      
         @if (Model.HasNextPage)
         {
-            @Html.ActionLink("Next >", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
+            @Html.ActionLink(Localization.Next + " >", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageNumber + 1, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
             @Html.Raw(" ")
             @Html.ActionLink(">>", "Index", new {ViewBag.filter, ViewBag.category, page = Model.PageCount, pageSize = Model.PageSize, sortOrder = ViewBag.Order})
         }
         else
         {
-            @Html.Raw("Next > >>")
+            @Localization.Next
+            @Html.Raw(" > >>")
         }
     </div>
     <div>
-        <p>Users per page:
+        <p>@Localization.Products_per_page:
             @Html.ActionLink("5", "Index", new {pageSize = 5, ViewBag.category, sortOrder = ViewBag.Order})
             @Html.ActionLink("10", "Index", new {pageSize = 10, ViewBag.category, sortOrder = ViewBag.Order})
             @Html.ActionLink("20", "Index", new {pageSize = 20, ViewBag.category, sortOrder = ViewBag.Order})
             @Html.ActionLink("50", "Index", new {pageSize = 50, ViewBag.category, sortOrder = ViewBag.Order})
-            @Html.ActionLink("All", "Index", new {pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order})
+            @Html.ActionLink(Localization.All, "Index", new {pageSize = 0, ViewBag.category, sortOrder = ViewBag.Order})
         </p>
     </div>
 }

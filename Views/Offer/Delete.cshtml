@@ -1,41 +1,50 @@
-﻿@model Seller.Models.Offer
+﻿@using Seller.Utils
+@using ViewRes
+@model Seller.Models.Offer
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = Localization.Delete;
 }
 
-<h2>Delete</h2>
-<script type="text/javascript" src="/Scripts/ajaxSetup.js"></script>
-<script type="text/javascript" src="/Scripts/browseProductAjax.js"></script>
+<h2>@Localization.Delete</h2>
+<script type="text/javascript" src="/Scripts/ajaxSetup.js"> </script>
+<script type="text/javascript" src="/Scripts/browseProductAjax.js"> </script>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>@Localization.SureDeleteOffer</h3>
 <fieldset>
-    <legend>Offer</legend>
+    <legend>@Localization.Offer</legend>
 
-    <div class="display-label">Shop</div>
+    <div class="display-label">@Localization.Shop</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Shop.Name)
     </div>
 
-    <div class="display-label">Product</div>
+    <div class="display-label">@Localization.Product</div>
     <div class="display-field">
         <a href="/Products/BrowseProduct?id=@Model.ProductId" class="product_name" data-id="@Model.ProductId">@Model.Product.Name</a>
     </div>
 
-    <div class="display-label">Price</div>
+    <div class="display-label">@Localization.Price</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.Price)
     </div>
 
-    <div class="display-label">LastUpdate</div>
+    <div class="display-label">@Localization.Last_update</div>
     <div class="display-field">
         @Html.DisplayFor(model => model.LastUpdate)
     </div>
 </fieldset>
-@using (Html.BeginForm()) {
+@using (Html.BeginForm())
+{
     <p>
-        <input type="submit" value="Delete" /> |
-        @Html.ActionLink("Back to List", "Index")
+        <input type="submit" value="@Localization.Delete" /> |
+        @if (Helper.Roles.ModeratorRoles.Any(role => User.IsInRole(role)))
+        {
+            @Html.ActionLink(Localization.Back_to_offers, "Index")
+            @:|
+        }
+
+        @Html.ActionLink(Localization.Back_to_products, "RedirectedBack", "Products")
     </p>
 }
 <div id="productBrowse" />

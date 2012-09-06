@@ -1,42 +1,43 @@
-﻿@model IEnumerable<Seller.Models.Shop>
+﻿@using ViewRes
+@model IEnumerable<Seller.Models.Shop>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = Localization.Index;
 }
 
-<h2>Index</h2>
+<h2>@Localization.Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink(Localization.Create_New, "Create")
 </p>
 <table>
     <tr>
         <th>
-            Name
+            @Localization.Name
         </th>
         <th>
-            Site
+            @Localization.Site
         </th>
         <th>
-            Phone
+            @Localization.Phone
         </th>
         <th>
-            Adress
+            @Localization.Address
         </th>
         <th>
-            Description
+            @Localization.Description
         </th>
         <th>
-            Email
+            @Localization.Email
         </th>
         <th>
-            Exchange
+            @Localization.Exchange
         </th>
         <th>
-            Image
+            @Localization.Image
         </th>
         <th>
-            AccountGuid
+            @Localization.AccountGuid
         </th>
         <th></th>
     </tr>
@@ -71,9 +72,9 @@
             @Html.DisplayFor(modelItem => item.AccountGuid)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ShopId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ShopId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ShopId })
+            @Html.ActionLink(Localization.Edit, "Edit", new { id=item.ShopId }) |
+            @Html.ActionLink(Localization.Details, "Details", new { id=item.ShopId }) |
+            @Html.ActionLink(Localization.Delete, "Delete", new { id=item.ShopId })
         </td>
     </tr>
 }
